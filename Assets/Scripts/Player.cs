@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     Animator anim;
     SpriteRenderer spr;
     TrailRenderer trail;
+    Camera mainCam;
 
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float dashPower = 5.0f;
@@ -16,6 +17,10 @@ public class Player : MonoBehaviour
     private float dashLimitTime = 0.5f;
     private float dashCoolTime = 3.0f;
     private bool isDashCool = false;
+    private Transform trsHand;
+    private Transform trsGun;
+    private SpriteRenderer sprGun;
+    private Transform trsMuzzle;
 
 
     private void Awake()
@@ -25,20 +30,24 @@ public class Player : MonoBehaviour
         spr = GetComponent<SpriteRenderer>();
         trail = GetComponent<TrailRenderer>();
         trail.enabled = false;
+        trsHand = transform.GetChild(0);
+        trsGun = trsHand.GetChild(0);
     }
 
     void Start()
     {
-
+        mainCam = Camera.main;
+        sprGun = trsGun.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         checkDashTime();
-        
+
         move();
         dash();
         dashCoolTimer();
+        checkMousePoint();
     }
 
     /// <summary>
@@ -68,8 +77,20 @@ public class Player : MonoBehaviour
         rigid.velocity = moveDir;
         anim.SetFloat("Horizontal", moveDir.x);
         anim.SetFloat("Vertical", moveDir.y);
+
+        if (moveDir.y > 0)
+        {
+            sprGun.sortingOrder = 1;
+        }
+        else
+        {
+            sprGun.sortingOrder = 3;
+        }
     }
 
+    /// <summary>
+    /// 스페이스를 누르면 대쉬하는 함수
+    /// </summary>
     private void dash()
     {
         if (isDashCool == true) return;//대쉬가 쿨이면 대쉬가 작동하지 않음
@@ -104,7 +125,9 @@ public class Player : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 대쉬 후 무적상태 해제함수
+    /// </summary>
     private void returnSituation()
     {
         gameObject.layer = LayerMask.NameToLayer("Player");
@@ -127,5 +150,34 @@ public class Player : MonoBehaviour
                 isDashCool = false;
             }
         }
+    }
+
+    /// <summary>
+    /// 마우스의 위치를 파악해 총의 방향을 결졍하는 함수
+    /// </summary>
+    private void checkMousePoint()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(mousePos);
+        float mouseX = mouseWorldPos.x;
+        Vector3 handScale = trsHand.transform.localScale;
+        Vector3 distanceMouseToPlayer = mouseWorldPos - transform.position;
+        Vector3 direction = Vector3.right;
+        if (distanceMouseToPlayer.x < 0)//왼쪽
+        {
+            handScale.x = -1;
+            direction = Vector3.left;
+        }
+        else if (distanceMouseToPlayer.x > 0)//오른쪽
+        {
+            handScale.x = 1;
+            direction = Vector3.right;
+        }
+        trsHand.transform.localScale = handScale;
+
+        float angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
+        trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x, -trsHand.localEulerAngles.y, angle);
+
+        //Debug.Log($"{mouseX}");
     }
 }
