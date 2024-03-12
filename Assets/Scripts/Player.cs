@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
         if (trsGun == null) return;
 
         Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 0;
+        mousePos.z = -mainCam.transform.position.z;
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(mousePos);
         Vector3 distanceMouseToPlayer = mouseWorldPos - transform.position;
         Vector3 direction = Vector3.right;
@@ -187,9 +187,9 @@ public class Player : MonoBehaviour
         {
             //손의 각도
             angle = Quaternion.FromToRotation(-direction, distanceMouseToPlayer).eulerAngles.z;
-            Debug.Log(angle);
-            //trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
-            return;
+            //Debug.Log(angle);
+            
+            //return;
             //총의 
             trsGun.SetParent(trsRightHand);
             trsGun.localPosition = Vector3.zero;
@@ -200,17 +200,18 @@ public class Player : MonoBehaviour
         else if (distanceMouseToPlayer.x > 0)//오른쪽
         {
             angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
-            Debug.Log(angle);
-            //trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, trsLeftHand.localEulerAngles.y, angle);
-            return;
+            //Debug.Log(angle);
+
+            //return;
             trsGun.SetParent(trsLeftHand);
             trsGun.localPosition = Vector3.zero;
             gunScale.x = 1;
             trsGun.localScale = gunScale;
         }
-            
+        trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
+        trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, trsLeftHand.localEulerAngles.y, angle);
 
-        
+
 
         //Debug.Log($"{mouseX}");
     }
