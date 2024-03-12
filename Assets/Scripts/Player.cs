@@ -19,12 +19,24 @@ public class Player : MonoBehaviour
     private bool isDashCool = false;
     [SerializeField] private Transform trsLeftHand;
     [SerializeField] private Transform trsRightHand;
-    [SerializeField] private GameObject trsGun;
+    private Transform trsGun;
     private SpriteRenderer sprGun;
     private Transform trsMuzzle;
     [SerializeField] GameObject objBullet;
     private float bulletSpeed = 50.0f;
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == GameTag.Gun.ToString())
+        {
+            collision.transform.SetParent(trsLeftHand);
+            collision.transform.localPosition = Vector3.zero;
+
+            trsGun = trsLeftHand.GetChild(0);
+            sprGun = trsGun.GetComponent<SpriteRenderer>();
+        }
+    }
 
     private void Awake()
     {
@@ -32,12 +44,13 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         trail = GetComponent<TrailRenderer>();
+        
     }
 
     void Start()
     {
         mainCam = Camera.main;
-        sprGun = trsGun.GetComponent<SpriteRenderer>();
+        
     }
 
     void Update()
@@ -48,7 +61,7 @@ public class Player : MonoBehaviour
         dash();
         dashCoolTimer();
         checkMousePoint();
-        checkShoot();
+        //checkShoot();
     }
 
     /// <summary>
@@ -79,14 +92,19 @@ public class Player : MonoBehaviour
         anim.SetFloat("Horizontal", moveDir.x);
         anim.SetFloat("Vertical", moveDir.y);
 
-        if (moveDir.y > 0)
-        {
-            sprGun.sortingOrder = 1;
-        }
+        if (sprGun == null) return;
         else
         {
-            sprGun.sortingOrder = 3;
+            if (moveDir.y > 0)
+            {
+                sprGun.sortingOrder = 1;
+            }
+            else
+            {
+                sprGun.sortingOrder = 3;
+            }
         }
+        
     }
 
     /// <summary>
@@ -155,45 +173,63 @@ public class Player : MonoBehaviour
     /// </summary>
     private void checkMousePoint()
     {
+        if (trsGun == null) return;
+
         Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 0;
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(mousePos);
-        float mouseX = mouseWorldPos.x;
-        Vector3 handScale = trsLeftHand.transform.localScale;
         Vector3 distanceMouseToPlayer = mouseWorldPos - transform.position;
         Vector3 direction = Vector3.right;
+        Vector3 gunScale = trsGun.localScale;
+
+        float angle = 0f;
         if (distanceMouseToPlayer.x < 0)//왼쪽
         {
-            handScale.x = -1;
-            direction = Vector3.left;
+            //손의 각도
+            angle = Quaternion.FromToRotation(-direction, distanceMouseToPlayer).eulerAngles.z;
+            Debug.Log(angle);
+            //trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
+            return;
+            //총의 
+            trsGun.SetParent(trsRightHand);
+            trsGun.localPosition = Vector3.zero;
+            gunScale.x = -1;
+            trsGun.localScale = gunScale;
+
         }
         else if (distanceMouseToPlayer.x > 0)//오른쪽
         {
-            handScale.x = 1;
-            direction = Vector3.right;
+            angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
+            Debug.Log(angle);
+            //trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, trsLeftHand.localEulerAngles.y, angle);
+            return;
+            trsGun.SetParent(trsLeftHand);
+            trsGun.localPosition = Vector3.zero;
+            gunScale.x = 1;
+            trsGun.localScale = gunScale;
         }
-        trsLeftHand.transform.localScale = handScale;
+            
 
-        float angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
-        trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, -trsLeftHand.localEulerAngles.y, angle);
+        
 
         //Debug.Log($"{mouseX}");
     }
 
-    private void checkShoot()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 shootDir = (mousePos - trsMuzzle.position).normalized;
+    //private void checkShoot()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+    //        Vector3 shootDir = (mousePos - trsMuzzle.position).normalized;
 
-            shoot(shootDir);
-        }
-    }
+    //        shoot(shootDir);
+    //    }
+    //}
 
-    private void shoot(Vector3 _shootDir)
-    {
-        GameObject bullet = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity);
-        Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
-        rigid.velocity = _shootDir * bulletSpeed;
-    }
+    //private void shoot(Vector3 _shootDir)
+    //{
+    //    GameObject bullet = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity);
+    //    Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+    //    rigid.velocity = _shootDir * bulletSpeed;
+    //}
 }
