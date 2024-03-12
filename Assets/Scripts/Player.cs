@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
             //Debug.Log(angle);
             
             //return;
-            //ÃÑÀÇ 
+            //ÃÑ
             trsGun.SetParent(trsRightHand);
             trsGun.localPosition = Vector3.zero;
             gunScale.x = -1;
@@ -208,6 +208,7 @@ public class Player : MonoBehaviour
             gunScale.x = 1;
             trsGun.localScale = gunScale;
         }
+
         trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
         trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, trsLeftHand.localEulerAngles.y, angle);
 
