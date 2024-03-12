@@ -17,10 +17,13 @@ public class Player : MonoBehaviour
     private float dashLimitTime = 0.5f;
     private float dashCoolTime = 3.0f;
     private bool isDashCool = false;
-    private Transform trsHand;
-    private Transform trsGun;
+    [SerializeField] private Transform trsLeftHand;
+    [SerializeField] private Transform trsRightHand;
+    [SerializeField] private GameObject trsGun;
     private SpriteRenderer sprGun;
     private Transform trsMuzzle;
+    [SerializeField] GameObject objBullet;
+    private float bulletSpeed = 50.0f;
 
 
     private void Awake()
@@ -29,9 +32,6 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         trail = GetComponent<TrailRenderer>();
-        trail.enabled = false;
-        trsHand = transform.GetChild(0);
-        trsGun = trsHand.GetChild(0);
     }
 
     void Start()
@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
         dash();
         dashCoolTimer();
         checkMousePoint();
+        checkShoot();
     }
 
     /// <summary>
@@ -101,7 +102,6 @@ public class Player : MonoBehaviour
 
             gameObject.layer = LayerMask.NameToLayer("Nodamage");
             spr.color = new Color(1, 1, 1, 0.4f);
-            trail.enabled = true;
             if (moveDir.x > 0)
             {
                 rigid.AddForce(new Vector2(2, 0) * dashPower, ForceMode2D.Impulse);
@@ -132,8 +132,6 @@ public class Player : MonoBehaviour
     {
         gameObject.layer = LayerMask.NameToLayer("Player");
         spr.color = new Color(1, 1, 1, 1);
-        trail.enabled = false;
-        trail.Clear();
     }
 
     /// <summary>
@@ -160,7 +158,7 @@ public class Player : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(mousePos);
         float mouseX = mouseWorldPos.x;
-        Vector3 handScale = trsHand.transform.localScale;
+        Vector3 handScale = trsLeftHand.transform.localScale;
         Vector3 distanceMouseToPlayer = mouseWorldPos - transform.position;
         Vector3 direction = Vector3.right;
         if (distanceMouseToPlayer.x < 0)//¿ÞÂÊ
@@ -173,11 +171,29 @@ public class Player : MonoBehaviour
             handScale.x = 1;
             direction = Vector3.right;
         }
-        trsHand.transform.localScale = handScale;
+        trsLeftHand.transform.localScale = handScale;
 
         float angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
-        trsHand.localEulerAngles = new Vector3(trsHand.localEulerAngles.x, -trsHand.localEulerAngles.y, angle);
+        trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, -trsLeftHand.localEulerAngles.y, angle);
 
         //Debug.Log($"{mouseX}");
+    }
+
+    private void checkShoot()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 shootDir = (mousePos - trsMuzzle.position).normalized;
+
+            shoot(shootDir);
+        }
+    }
+
+    private void shoot(Vector3 _shootDir)
+    {
+        GameObject bullet = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity);
+        Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+        rigid.velocity = _shootDir * bulletSpeed;
     }
 }

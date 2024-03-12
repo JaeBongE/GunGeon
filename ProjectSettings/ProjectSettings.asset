@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: DefaultCompany
   productName: GunGeon
-  defaultCursor: {fileID: 2800000, guid: 5a028453e9963c445be363993cc1961d, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 3672da0c75c6f4046a42c07437a8036a, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.12156863, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
