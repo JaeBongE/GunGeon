@@ -7,7 +7,6 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     Animator anim;
     SpriteRenderer spr;
-    TrailRenderer trail;
     Camera mainCam;
 
     [SerializeField] private float moveSpeed = 5.0f;
@@ -21,9 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform trsRightHand;
     private Transform trsGun;
     private SpriteRenderer sprGun;
-    private Transform trsMuzzle;
-    [SerializeField] GameObject objBullet;
-    private float bulletSpeed = 50.0f;
+    private Vector3 shootDir;
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,8 +40,6 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
-        trail = GetComponent<TrailRenderer>();
-        
     }
 
     void Start()
@@ -62,6 +57,7 @@ public class Player : MonoBehaviour
         dashCoolTimer();
         checkMousePoint();
         //checkShoot();
+        shoot();
     }
 
     /// <summary>
@@ -95,7 +91,7 @@ public class Player : MonoBehaviour
         if (sprGun == null) return;
         else
         {
-            if (moveDir.y > 0)
+            if (moveDir.y > 0)//포폴 문서에 적기
             {
                 sprGun.sortingOrder = 1;
             }
@@ -171,7 +167,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 마우스의 위치를 파악해 총의 방향을 결졍하는 함수
     /// </summary>
-    private void checkMousePoint()
+    private void checkMousePoint()//포폴 문서에 적기
     {
         if (trsGun == null) return;
 
@@ -183,55 +179,63 @@ public class Player : MonoBehaviour
         Vector3 gunScale = trsGun.localScale;
 
         float angle = 0f;
-        if (distanceMouseToPlayer.x < 0)//왼쪽
+        if (distanceMouseToPlayer.x < 0)//마우스 위치 왼쪽 / 총은 오른손
         {
+            anim.SetBool("LookFront", false);
+            sprGun.sortingOrder = 3;
+
             //손의 각도
             angle = Quaternion.FromToRotation(-direction, distanceMouseToPlayer).eulerAngles.z;
-            //Debug.Log(angle);
             
-            //return;
+
             //총
             trsGun.SetParent(trsRightHand);
             trsGun.localPosition = Vector3.zero;
             gunScale.x = -1;
             trsGun.localScale = gunScale;
 
-        }
-        else if (distanceMouseToPlayer.x > 0)//오른쪽
-        {
-            angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
-            //Debug.Log(angle);
+            if (angle > 270f && angle < 320f)
+            {
+                anim.SetBool("LookFront", true);
+                sprGun.sortingOrder = 1;//포폴 문서에 적기
+            }
 
-            //return;
+        }
+        else if (distanceMouseToPlayer.x > 0)//마우스 위치 오른쪽 / 총은 왼손
+        {
+            anim.SetBool("LookFront", false);
+            sprGun.sortingOrder = 3;
+
+            //손의 각도
+            angle = Quaternion.FromToRotation(direction, distanceMouseToPlayer).eulerAngles.z;
+
+            //총
             trsGun.SetParent(trsLeftHand);
             trsGun.localPosition = Vector3.zero;
             gunScale.x = 1;
             trsGun.localScale = gunScale;
+
+            if (angle > 40f && angle < 90f)
+            {
+                anim.SetBool("LookFront", true);
+                sprGun.sortingOrder = 1;
+            }
         }
 
         trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
         trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, trsLeftHand.localEulerAngles.y, angle);
 
-
-
-        //Debug.Log($"{mouseX}");
     }
 
-    //private void checkShoot()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-    //        Vector3 shootDir = (mousePos - trsMuzzle.position).normalized;
+    private void shoot()
+    {
+        if (trsGun == null) return;
 
-    //        shoot(shootDir);
-    //    }
-    //}
+        if (Input.GetMouseButtonDown(0))
+        {
+            Gun gun = trsGun.GetComponent<Gun>();
+            gun.CreateBullet();
+        }
+    }
 
-    //private void shoot(Vector3 _shootDir)
-    //{
-    //    GameObject bullet = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity);
-    //    Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
-    //    rigid.velocity = _shootDir * bulletSpeed;
-    //}
 }

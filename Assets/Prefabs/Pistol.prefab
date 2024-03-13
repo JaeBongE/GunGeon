@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 2075431526844541538}
   - component: {fileID: 4461105091759052383}
   - component: {fileID: 6409833421027593663}
+  - component: {fileID: 7673049239759773027}
   m_Layer: 0
-  m_Name: deagle
+  m_Name: Pistol
   m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,6 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 508a3441357e8924786374379edd6c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objBullet: {fileID: 7135266558617856800, guid: f344bb77b22055743b23111f751a569b, type: 3}
+  bulletSpeed: 15
 --- !u!61 &6409833421027593663
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -131,10 +134,10 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.17470944, y: 0.07316949}
+  m_Offset: {x: 0.18459368, y: 0.090510584}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.3451021, y: 0.31863827}
+    pivot: {x: 0.36227983, y: 0.2986116}
     oldSize: {x: 1.0547369, y: 0.52842104}
     newSize: {x: 1.0547369, y: 0.52842104}
     adaptiveTilingThreshold: 0.5
@@ -142,8 +145,22 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.47675717, y: 0.27909648}
+  m_Size: {x: 0.48671627, y: 0.27909654}
   m_EdgeRadius: 0
+--- !u!114 &7673049239759773027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127752917129337967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc272dcd216eb4f86d4de76dffd14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objBullet: {fileID: 7135266558617856800, guid: f344bb77b22055743b23111f751a569b, type: 3}
+  bulletSpeed: 15
 --- !u!1 &8184270589577996764
 GameObject:
   m_ObjectHideFlags: 0
