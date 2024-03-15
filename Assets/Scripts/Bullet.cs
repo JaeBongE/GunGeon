@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float bulletSpeed = 20f;
 
     private void Awake()
     {
-        
+        Destroy(gameObject, 3f);
     }
 }

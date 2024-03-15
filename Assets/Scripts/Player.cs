@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform trsRightHand;
     private Transform trsGun;
     private SpriteRenderer sprGun;
-    private Vector3 shootDir;
+    [SerializeField] GameObject reLoadUi;
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
+        reLoadUi.SetActive(false);
     }
 
     void Start()
@@ -200,6 +201,9 @@ public class Player : MonoBehaviour
                 sprGun.sortingOrder = 1;//포폴 문서에 적기
             }
 
+            anim.SetBool("AimRight", false);
+            anim.SetBool("AimLeft", true);
+
         }
         else if (distanceMouseToPlayer.x > 0)//마우스 위치 오른쪽 / 총은 왼손
         {
@@ -220,6 +224,24 @@ public class Player : MonoBehaviour
                 anim.SetBool("LookFront", true);
                 sprGun.sortingOrder = 1;
             }
+
+            anim.SetBool("AimRight", true);
+            anim.SetBool("AimLeft", false);
+        }
+
+        if (distanceMouseToPlayer.y > 0)
+        {
+            if (trsGun == null) return;
+
+            anim.SetBool("AimFront", true);
+            anim.SetBool("AimBehind", false);
+        }
+        else if (distanceMouseToPlayer.y < 0)
+        {
+            if (trsGun == null) return;
+
+            anim.SetBool("AimFront", false);
+            anim.SetBool("AimBehind", true);
         }
 
         trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
@@ -231,7 +253,7 @@ public class Player : MonoBehaviour
     {
         if (trsGun == null) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             Gun gun = trsGun.GetComponent<Gun>();
             gun.CreateBullet();
