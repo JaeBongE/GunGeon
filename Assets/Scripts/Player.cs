@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance;
+
     Rigidbody2D rigid;
     Animator anim;
     SpriteRenderer spr;
@@ -21,32 +23,35 @@ public class Player : MonoBehaviour
     private Transform trsGun;
     private SpriteRenderer sprGun;
     [SerializeField] GameObject reLoadUi;
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    [SerializeField] GameObject pisTol;
+    public GameObject GetReloadUi()
     {
-        if (collision.gameObject.tag == GameTag.Gun.ToString())
-        {
-            collision.transform.SetParent(trsLeftHand);
-            collision.transform.localPosition = Vector3.zero;
-
-            trsGun = trsLeftHand.GetChild(0);
-            sprGun = trsGun.GetComponent<SpriteRenderer>();
-        }
+        return reLoadUi;
     }
 
     private void Awake()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+
+        }
+
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         reLoadUi.SetActive(false);
+        trsGun = gameObject.transform.Find("Pistol");
     }
 
     void Start()
     {
         mainCam = Camera.main;
-        
+
     }
 
     void Update()
@@ -101,7 +106,7 @@ public class Player : MonoBehaviour
                 sprGun.sortingOrder = 3;
             }
         }
-        
+
     }
 
     /// <summary>
@@ -187,7 +192,7 @@ public class Player : MonoBehaviour
 
             //º’¿« ∞¢µµ
             angle = Quaternion.FromToRotation(-direction, distanceMouseToPlayer).eulerAngles.z;
-            
+
 
             //√—
             trsGun.SetParent(trsRightHand);
@@ -258,6 +263,16 @@ public class Player : MonoBehaviour
             Gun gun = trsGun.GetComponent<Gun>();
             gun.CreateBullet();
         }
+    }
+
+
+    public void GetGun(GameObject _gun)
+    {
+        _gun.transform.SetParent(trsLeftHand);
+        _gun.transform.localPosition = Vector3.zero;
+
+        trsGun = trsLeftHand.GetChild(0);
+        sprGun = trsGun.GetComponent<SpriteRenderer>();
     }
 
 }

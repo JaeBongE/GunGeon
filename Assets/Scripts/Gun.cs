@@ -5,7 +5,10 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     protected Camera mainCam;
+    Player player;
 
+    protected Collider2D coll;
+    protected Rigidbody2D rigid;
     [SerializeField] protected GameObject objBullet;
     [SerializeField] protected float bulletSpeed = 20f;
     protected Transform trsMuzzle;
@@ -17,24 +20,84 @@ public class Gun : MonoBehaviour
     [SerializeField] protected float reloadMaxTimer = 3f;
     [SerializeField] protected float reloadTimer = 0f;
     protected bool isReload = false;
-    [SerializeField] GameObject reLoadUi;
+    GameObject reLoadUi;
+    [SerializeField] GameObject eIcon;
+
+    public enum GunType
+    {
+        Pistol,
+        Rafle,
+    }
+
+    public GunType type;
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == GameTag.Player.ToString())
+        {
+            eIcon.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == GameTag.Player.ToString())
+        {
+            eIcon.SetActive(false);
+        }
+    }
 
     protected virtual void Awake()
     {
+        coll = GetComponent<Collider2D>();
+        rigid = GetComponent<Rigidbody2D>();
         trsMuzzle = gameObject.transform.GetChild(0);
         curBullet = maxBullet;
+        //eIcon.SetActive(false);
     }
 
     protected virtual void Start()
     {
         mainCam = Camera.main;
+        player = Player.Instance;
     }
 
     private void Update()
     {
+        getGun();
+        checkGunUi();
+
         gunDelay();
         reLoad();
     }
+
+    private void checkGunUi()
+    {
+        if (reLoadUi == null)
+        {
+            //reLoadUi = GameObject.Find("ReloadUi");//actvie False 오브젝트는 찾을수가 없음
+            //Transform trsPlayer = Transform.FindAnyObjectByType<Player>(FindObjectsInactive.Include).transform;
+            //reLoadUi = trsPlayer.Find("ReloadUi").gameObject;
+            reLoadUi = player.GetReloadUi();
+        }
+    }
+
+    private void getGun()
+    {
+        //if (type == GunType.Pistol) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Collider2D playerColl = Physics2D.OverlapBox(coll.bounds.center, coll.bounds.size, 0, LayerMask.GetMask("Player"));
+            if (playerColl != null)
+            {
+                player.GetGun(gameObject);
+                eIcon.SetActive(false);
+            }
+        }
+    }
+
 
     public void CreateBullet()
     {
