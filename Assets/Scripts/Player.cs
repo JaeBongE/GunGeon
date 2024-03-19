@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private bool isDashCool = false;
     [SerializeField] private Transform trsLeftHand;
     [SerializeField] private Transform trsRightHand;
+    private GameObject objGun;
     private Transform trsGun;
     private SpriteRenderer sprGun;
     [SerializeField] GameObject reLoadUi;
@@ -41,7 +42,6 @@ public class Player : MonoBehaviour
         else
         {
             Destroy(this);
-
         }
 
         rigid = GetComponent<Rigidbody2D>();
@@ -290,9 +290,11 @@ public class Player : MonoBehaviour
             _gun.transform.localPosition = Vector3.zero;
             trsGun = _gun.transform;
             sprGun = trsGun.GetComponent<SpriteRenderer>();
-
         }
 
+        objGun = _gun;
+
     }
+
 
 }

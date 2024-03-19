@@ -6,6 +6,7 @@ public class Gun : MonoBehaviour
 {
     protected Camera mainCam;
     Player player;
+    GameManager gameManager;
 
     protected Collider2D coll;
     protected Rigidbody2D rigid;
@@ -61,11 +62,13 @@ public class Gun : MonoBehaviour
     {
         mainCam = Camera.main;
         player = Player.Instance;
+        gameManager = GameManager.Instance;
     }
 
     private void Update()
     {
         getGun();
+        
         checkGunUi();
 
         gunDelay();
@@ -94,6 +97,7 @@ public class Gun : MonoBehaviour
             {
                 player.GetGun(gameObject);
                 eIcon.SetActive(false);
+                gameManager.setBulletInfor(curBullet, maxBullet);
             }
         }
     }
@@ -112,11 +116,13 @@ public class Gun : MonoBehaviour
         mousePos.z = 0;
         Vector3 shootDir = (mousePos - trsMuzzle.position).normalized;
 
-        rigid.AddForce(shootDir * bulletSpeed, ForceMode2D.Impulse);
-        //rigid.velocity = shootDir * bulletSpeed;
+        //rigid.AddForce(shootDir * bulletSpeed, ForceMode2D.Impulse);
+        rigid.velocity = shootDir * bulletSpeed;
 
         curBullet--;
         isShoot = true;
+
+        gameManager.setBulletInfor(curBullet, maxBullet);
 
         if (curBullet <= 0f)
         {
@@ -156,6 +162,7 @@ public class Gun : MonoBehaviour
             {
                 reloadTimer = 0;
                 curBullet = maxBullet;
+                gameManager.setBulletInfor(curBullet, maxBullet);
                 isReload = false;
                 reLoadUi.SetActive(false);
             }
