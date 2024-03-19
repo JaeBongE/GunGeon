@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour
     private SpriteRenderer sprGun;
     [SerializeField] GameObject reLoadUi;
     [SerializeField] GameObject pisTol;
+    private bool isPistol = false;
+    [SerializeField] Transform trsBack;
     public GameObject GetReloadUi()
     {
         return reLoadUi;
@@ -45,7 +48,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         reLoadUi.SetActive(false);
-        trsGun = gameObject.transform.Find("Pistol");
+        //trsGun = gameObject.transform.Find("Pistol");
     }
 
     void Start()
@@ -268,11 +271,28 @@ public class Player : MonoBehaviour
 
     public void GetGun(GameObject _gun)
     {
-        _gun.transform.SetParent(trsLeftHand);
-        _gun.transform.localPosition = Vector3.zero;
+        if (_gun.name == "Pistol")
+        {
+            _gun.transform.SetParent(trsLeftHand);
+            _gun.transform.localPosition = Vector3.zero;
+            isPistol = true;
+            trsGun = _gun.transform;
+            sprGun = trsGun.GetComponent<SpriteRenderer>();
+        }
 
-        trsGun = trsLeftHand.GetChild(0);
-        sprGun = trsGun.GetComponent<SpriteRenderer>();
+        if (_gun.name != "Pistol" && isPistol == true)
+        {
+            trsRightHand.localEulerAngles = Vector3.zero;
+            trsLeftHand.localEulerAngles = Vector3.zero;
+            pisTol.transform.SetParent(trsBack);
+            pisTol.SetActive(false);
+            _gun.transform.SetParent(trsLeftHand);
+            _gun.transform.localPosition = Vector3.zero;
+            trsGun = _gun.transform;
+            sprGun = trsGun.GetComponent<SpriteRenderer>();
+
+        }
+
     }
 
 }
