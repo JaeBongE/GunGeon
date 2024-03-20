@@ -66,6 +66,9 @@ public class GameManager : MonoBehaviour
         if (_isGun == true)
         {
             isGunImageOn = true;
+            GameObject objStage1Manager = GameObject.Find("Stage1Manager");
+            Stage1Manager scStage1 = objStage1Manager.GetComponent<Stage1Manager>();
+            scStage1.isContinue(isGunImageOn);
         }
     }
 }
