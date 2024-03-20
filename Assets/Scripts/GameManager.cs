@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text gunBulletUi;
     private float maxBullet;
     private float curBullet;
+    private bool isGunImageOn = false;
 
     private void Awake()
     {
@@ -24,6 +25,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        gunUi.gameObject.SetActive(false);
     }
 
     void Start()
@@ -39,7 +42,10 @@ public class GameManager : MonoBehaviour
 
     private void setGunUi()
     {
-
+        if (isGunImageOn == true)
+        {
+            gunUi.gameObject.SetActive(true);
+        }
     }
 
     private void setGunBulletUi()
@@ -53,9 +59,13 @@ public class GameManager : MonoBehaviour
         maxBullet = _maxBullet;
     }
 
-    public void setGunInfor(GameObject _gun)
+    public void setGunInfor(GameObject _gun, bool _isGun)
     {
         SpriteRenderer spr = _gun.GetComponent<SpriteRenderer>();
-        //gunUi
+        gunUi.sprite = spr.sprite;
+        if (_isGun == true)
+        {
+            isGunImageOn = true;
+        }
     }
 }

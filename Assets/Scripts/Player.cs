@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class Player : MonoBehaviour
 {
     public static Player Instance;
+    GameManager gameManager;
 
     Rigidbody2D rigid;
     Animator anim;
@@ -54,7 +55,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-
+        gameManager = GameManager.Instance;
     }
 
     void Update()
@@ -275,9 +276,11 @@ public class Player : MonoBehaviour
         {
             _gun.transform.SetParent(trsLeftHand);
             _gun.transform.localPosition = Vector3.zero;
-            isPistol = true;
+
             trsGun = _gun.transform;
             sprGun = trsGun.GetComponent<SpriteRenderer>();
+
+            isPistol = true;
         }
 
         if (_gun.name != "Pistol" && isPistol == true)
@@ -286,14 +289,17 @@ public class Player : MonoBehaviour
             trsLeftHand.localEulerAngles = Vector3.zero;
             pisTol.transform.SetParent(trsBack);
             pisTol.SetActive(false);
+
             _gun.transform.SetParent(trsLeftHand);
             _gun.transform.localPosition = Vector3.zero;
+
             trsGun = _gun.transform;
             sprGun = trsGun.GetComponent<SpriteRenderer>();
         }
 
         objGun = _gun;
 
+        gameManager.setGunInfor(objGun, true);
     }
 
 
