@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
     private float maxBullet;
     private float curBullet;
     private bool isGunImageOn = false;
+    [SerializeField] Image hp3;
+    [SerializeField] Image hp2;
+    [SerializeField] Image hp1;
+    private float maxHp;
+    private float curHp;
 
     private void Awake()
     {
@@ -38,6 +43,7 @@ public class GameManager : MonoBehaviour
     {
         setGunUi();
         setGunBulletUi();
+        setPlayerHp();
     }
 
     private void setGunUi()
@@ -51,6 +57,22 @@ public class GameManager : MonoBehaviour
     private void setGunBulletUi()
     {
         gunBulletUi.text = ($"{curBullet} / {maxBullet}");
+    }
+
+    private void setPlayerHp()
+    {
+        if (curHp < maxHp)
+        {
+            hp3.gameObject.SetActive(false);
+            if (curHp < maxHp - 1)
+            {
+                hp2.gameObject.SetActive(false);
+                if (curHp == 0)
+                {
+                    hp1.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     public void setBulletInfor(float _curBullet, float _maxBullet)
@@ -70,5 +92,11 @@ public class GameManager : MonoBehaviour
             Stage1Manager scStage1 = objStage1Manager.GetComponent<Stage1Manager>();
             scStage1.isContinue(isGunImageOn);
         }
+    }
+
+    public void getPlayerHp(float _maxHp, float _curHp)
+    {
+        curHp = _curHp;
+        maxHp = _maxHp;
     }
 }

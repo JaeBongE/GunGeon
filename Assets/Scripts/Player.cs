@@ -13,15 +13,22 @@ public class Player : MonoBehaviour
     SpriteRenderer spr;
     Camera mainCam;
 
+    [Header("스탯")]
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float dashPower = 5.0f;
     private Vector3 moveDir;
+    [SerializeField] private float maxHp = 3;
+    [SerializeField] private float curHp = 0;
+
+
+    [Header("기타")]
+    [SerializeField] GameObject hitBox;
+    [SerializeField] private Transform trsLeftHand;
+    [SerializeField] private Transform trsRightHand;
     private float dashTime = 0.0f;
     private float dashLimitTime = 0.5f;
     private float dashCoolTime = 3.0f;
     private bool isDashCool = false;
-    [SerializeField] private Transform trsLeftHand;
-    [SerializeField] private Transform trsRightHand;
     private GameObject objGun;
     private Transform trsGun;
     private SpriteRenderer sprGun;
@@ -36,7 +43,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -49,6 +56,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         reLoadUi.SetActive(false);
+        curHp = maxHp;
         //trsGun = gameObject.transform.Find("Pistol");
     }
 
@@ -68,6 +76,8 @@ public class Player : MonoBehaviour
         checkMousePoint();
         //checkShoot();
         shoot();
+
+
     }
 
     /// <summary>
@@ -125,6 +135,7 @@ public class Player : MonoBehaviour
             dashTime = dashLimitTime;//대쉬를 했을 때 velocitiy가 다른 함수에 적용되지 않게 하기 위함
 
             gameObject.layer = LayerMask.NameToLayer("Nodamage");
+            hitBox.layer = LayerMask.NameToLayer("Nodamage");
             spr.color = new Color(1, 1, 1, 0.4f);
             if (moveDir.x > 0)
             {
@@ -155,6 +166,7 @@ public class Player : MonoBehaviour
     private void returnSituation()
     {
         gameObject.layer = LayerMask.NameToLayer("Player");
+        hitBox.layer = LayerMask.NameToLayer("PlayerHitBox");
         spr.color = new Color(1, 1, 1, 1);
     }
 
@@ -302,5 +314,18 @@ public class Player : MonoBehaviour
         gameManager.setGunInfor(objGun, true);
     }
 
+    public void GetDamage()
+    {
+        if (curHp > 0)
+        {
+            curHp--;
+
+            gameManager.getPlayerHp(maxHp, curHp);
+            if (curHp < 1)
+            {
+                anim.SetTrigger("isDeath");
+            }
+        }
+    }
 
 }

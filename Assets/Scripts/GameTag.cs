@@ -7,5 +7,9 @@ using UnityEngine;
         Player,
         Enemy,
         Gun,
+        PlayerBullet,
+        PlayerHitBox,
+        EnemyHitBox,
+        Wall,
     }
 

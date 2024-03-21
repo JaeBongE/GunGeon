@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Gun
+  - Enemy
+  - PlayerBullet
+  - PlayerHitBox
+  - EnemyHitBox
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -14,9 +19,9 @@ TagManager:
   - UI
   - Nodamage
   - Wall
-  - 
-  - 
-  - 
+  - Enemy
+  - PlayerHitBox
+  - EnemyHitBox
   - 
   - 
   - 
