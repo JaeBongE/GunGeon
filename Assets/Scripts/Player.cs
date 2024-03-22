@@ -270,6 +270,9 @@ public class Player : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 총을 쏘는 함수, 총이 없다면 return
+    /// </summary>
     private void shoot()
     {
         if (trsGun == null) return;
@@ -282,6 +285,10 @@ public class Player : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 총을 획득하는 함수 *미완
+    /// </summary>
+    /// <param name="_gun"></param>
     public void GetGun(GameObject _gun)
     {
         if (_gun.name == "Pistol")
@@ -314,6 +321,9 @@ public class Player : MonoBehaviour
         gameManager.setGunInfor(objGun, true);
     }
 
+    /// <summary>
+    /// 적에게 닿으면 hp가 1씩 달고 0이 되면 죽는 함수
+    /// </summary>
     public void GetDamage()
     {
         if (curHp > 0)
