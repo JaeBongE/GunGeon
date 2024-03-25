@@ -1,14 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class AstarGrid : MonoBehaviour
 {
     [SerializeField] Tilemap walkableMap;
+    [Header("씬에 그리드를 표시")]
+    [SerializeField] bool ShowTestGrid;
 
     private AstarNode[,] grid; // [y,x] 그리드
     private AstarPathfind pathfinder;
+
+    private AstarNode startNode;
+    private AstarNode endNode;
 
 
     void Start()
@@ -60,4 +66,100 @@ public class AstarGrid : MonoBehaviour
             node.Reset();
         }
     }
+
+    public AstarNode GetNodeFromWorld(Vector3 _worldPos)
+    {
+        //월드 좌표로 해당 좌표의 AstarNode 인스턴스를 얻는다.
+        Vector3Int cellPos = walkableMap.WorldToCell(_worldPos);
+        int y = cellPos.y + Mathf.Abs(walkableMap.cellBounds.yMin);
+        int x = cellPos.x + Mathf.Abs(walkableMap.cellBounds.xMin);
+
+        AstarNode node = grid[y, x];
+        return node;
+    }
+
+    public List<AstarNode> GetNeighborNodes(AstarNode _node, bool diagonal = false)
+    {
+        List<AstarNode> neighbors = new List<AstarNode>();
+        int height = grid.GetUpperBound(0);
+        int width = grid.GetUpperBound(1);
+
+        int y = _node.yIndex;
+        int x = _node.xIndex;
+        //상하
+        if (y < height)
+        {
+            neighbors.Add(grid[y + 1, x]);
+        }
+        if (y > 0)
+        {
+            neighbors.Add(grid[y - 1, x]);
+        }
+        //좌우
+        if(x < width)
+        {
+            neighbors.Add(grid[y, x + 1]);
+        }
+        if (x > 0)
+        {
+            neighbors.Add(grid[y, x - 1]);
+        }
+
+        if (!diagonal) return neighbors;
+
+        //대각선
+        if (x > 0 && y > 0)
+        {
+            neighbors.Add(grid[y - 1, x - 1]);
+        }
+        if (x < width && y > 0)
+        {
+            neighbors.Add(grid[y - 1, x + 1]);
+        }
+        if (x > 0 && y < height)
+        {
+            neighbors.Add(grid[y + 1, x - 1]);
+        }
+        if (x < width && y < height)
+        {
+            neighbors.Add(grid[y + 1, x + 1]);
+        }
+
+        return neighbors;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (grid != null && ShowTestGrid == true)
+        {
+            foreach (var node in grid)
+            {
+                Gizmos.color = Color.red;
+                Vector3Int cellPos = walkableMap.WorldToCell(new Vector3(node.xPos, node.yPos));
+                Vector3 drawPos = walkableMap.GetCellCenterWorld(cellPos);
+                drawPos -= walkableMap.cellGap / 2;
+                Vector3 drawsize = walkableMap.cellSize;
+                Gizmos.DrawWireCube(drawPos, drawsize);
+            }
+        }
+    }
+
+    public void PathFind(bool diagonal)
+    {
+        List<AstarNode> path = pathfinder.CreathPath(startNode, endNode, diagonal);
+        if (path != null)
+        {
+            for (int iNum = 0; iNum < path.Count -1; iNum++)
+            {
+                Vector3Int startCellPos = walkableMap.WorldToCell(new Vector3(path[iNum].xPos, path[iNum].yPos));
+                Vector3 startCenterPos = walkableMap.GetCellCenterLocal(startCellPos);
+                startCenterPos -= walkableMap.cellGap / 2;
+
+                Vector3Int endCellPos = walkableMap.WorldToCell(new Vector3(path[iNum + 1].xPos, path[iNum + 1].yPos));
+                Vector3 endCenterPos = walkableMap.GetCellCenterLocal(endCellPos);
+                endCenterPos -= walkableMap.cellGap / 2;
+            }
+        }
+    }
+
 }
