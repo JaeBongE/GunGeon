@@ -1,31 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class AstarGrid : MonoBehaviour
 {
+    Camera mainCam;
+
     [SerializeField] Tilemap walkableMap;
     [Header("씬에 그리드를 표시")]
     [SerializeField] bool ShowTestGrid;
+    [Header("대각선 탐색")]
+    [SerializeField] bool Diagonal;
 
     private AstarNode[,] grid; // [y,x] 그리드
     private AstarPathfind pathfinder;
 
     private AstarNode startNode;
     private AstarNode endNode;
+    private GameObject objEnemy;
 
 
     void Start()
     {
         CreateGrid();
         pathfinder = new AstarPathfind(this);
+        mainCam = Camera.main;
     }
 
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+            startNode = GetNodeFromWorld(pos);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+            endNode = GetNodeFromWorld(pos);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            PathFind(Diagonal);
+        }
     }
 
     private void CreateGrid()
@@ -158,6 +177,9 @@ public class AstarGrid : MonoBehaviour
                 Vector3Int endCellPos = walkableMap.WorldToCell(new Vector3(path[iNum + 1].xPos, path[iNum + 1].yPos));
                 Vector3 endCenterPos = walkableMap.GetCellCenterLocal(endCellPos);
                 endCenterPos -= walkableMap.cellGap / 2;
+
+                Debug.DrawLine(new Vector3(path[iNum].xPos, path[iNum].yPos), new Vector3(path[iNum + 1].xPos, path[iNum + 1].yPos), Color.black, 2f);
+                Debug.DrawLine(startCellPos, endCenterPos, Color.white, 2f);
             }
         }
     }
