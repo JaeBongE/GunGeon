@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     private float maxHp;
     private float curHp;
 
+    GameObject[] enemies;
+    [SerializeField] GameObject potal;
+
     private void Awake()
     {
         if (Instance == null)
@@ -30,13 +33,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
-
         gunUi.gameObject.SetActive(false);
     }
 
     void Start()
     {
         player = Player.Instance;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        potal.SetActive(false);
     }
 
     void Update()
@@ -44,7 +48,9 @@ public class GameManager : MonoBehaviour
         setGunUi();
         setGunBulletUi();
         setPlayerHp();
+        checkEnemy();
     }
+
 
     private void setGunUi()
     {
@@ -75,6 +81,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void checkEnemy()
+    {
+        int count = enemies.Length;
+        bool allClear = true;
+        for (int iNum = 0; iNum < count; ++iNum)
+        {
+            if (enemies[iNum] != null)
+            {
+                allClear = false;
+            }
+        }
+        //allClear
+
+        if (allClear == true)
+        {
+            potal.SetActive(true);
+        }
+    }
+
     public void setBulletInfor(float _curBullet, float _maxBullet)
     {
         curBullet = _curBullet;
@@ -98,5 +123,20 @@ public class GameManager : MonoBehaviour
     {
         curHp = _curHp;
         maxHp = _maxHp;
+    }
+
+    public void CheckoutEnemy(GameObject _obj)
+    {
+        int count = enemies.Length;
+        for (int iNum = 0; iNum < count; ++iNum)
+        {
+            if (enemies[iNum] == _obj)
+            {
+                enemies[iNum] = null;
+                return;
+            }
+        }
+
+        checkEnemy();
     }
 }

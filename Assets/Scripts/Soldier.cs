@@ -13,7 +13,6 @@ public class Soldier : Enemy
         {
             gameObject.layer = LayerMask.NameToLayer("Nodamage");
             anim.SetTrigger("Death");
-            Destroy(gameObject, 1f);
         }
     }
 

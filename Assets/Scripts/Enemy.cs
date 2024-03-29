@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    GameManager gameManager;
+
     [SerializeField] protected float maxHp;
     [SerializeField] protected float curHp;
     protected Animator anim;
@@ -30,6 +32,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         targetPos = getRandomPos();
+        gameManager = GameManager.Instance;
     }
 
     public virtual void GetDamage(float _damage)
@@ -43,12 +46,11 @@ public class Enemy : MonoBehaviour
         moveRandom();
         moveCoolTime();
 
-        //if (curHp < 1)
-        //{
-        //    gameObject.layer = LayerMask.NameToLayer("Nodamage");
-        //    anim.SetTrigger("Death");
-        //    Destroy(gameObject, 1f);
-        //}
+        if (curHp < 1)
+        {
+            gameManager.CheckoutEnemy(gameObject);
+            Destroy(gameObject, 1f);
+        }
     }
 
     public virtual void moveRandom()
