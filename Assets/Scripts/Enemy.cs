@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     GameManager gameManager;
+    public static Enemy Instance;
 
     [SerializeField] protected float maxHp;
     [SerializeField] protected float curHp;
@@ -21,9 +22,19 @@ public class Enemy : MonoBehaviour
     protected bool isMove = true;
     protected float moveMaxCool = 2f;
     protected float moveCool = 0f;
+    [SerializeField] protected bool isCheckPlayer = false;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+
         curHp = maxHp;
         anim = GetComponent<Animator>();
         isMove = true;
@@ -43,33 +54,43 @@ public class Enemy : MonoBehaviour
 
     public virtual void Update()
     {
-        moveRandom();
+        move();
         moveCoolTime();
 
         if (curHp < 1)
         {
+            moveSpeed = 0f;
             gameManager.CheckoutEnemy(gameObject);
             Destroy(gameObject, 1f);
         }
     }
 
-    public virtual void moveRandom()
+    public virtual void move()
     {
         if (isMove == false) return;
 
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
-        
-        if (Vector3.Distance(gameObject.transform.position, targetPos) < 0.1f)
+        if (isCheckPlayer == false)
         {
-            isMove = false;
-            targetPos = getRandomPos();
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(gameObject.transform.position, targetPos) < 0.1f)
+            {
+                isMove = false;
+                targetPos = getRandomPos();
+            }
         }
-
-
+        else
+        {
+            GameObject objPlayer = GameObject.Find("Player");
+            targetPos = objPlayer.transform.position;
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
+        }
     }
 
     private void moveCoolTime()
     {
+        if (isCheckPlayer == true) return;
+
         if (isMove == false)
         {
             moveMaxCool -= Time.deltaTime;
@@ -86,5 +107,11 @@ public class Enemy : MonoBehaviour
         float randomX = Random.Range(minX, maxX);
         float randomY = Random.Range(minY, maxY);
         return new Vector3(randomX, randomY, gameObject.transform.position.z);
+    }
+
+    public void CheckPlayer()
+    {
+        isCheckPlayer = true;
+        isMove = true;
     }
 }

@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class Soldier : Enemy
 {
+    private float shootTimer = 0;
+    private float shootTime = 2;
+    private bool isShoot = false;
+    [SerializeField] Transform trsMuzzle;
+    [SerializeField] GameObject enemyBullet;
+    [SerializeField] private float bulletSpeed = 15f;
 
     public override void Update()
     {
         base.Update();
+        shoot();
+        shootCoolTime();
 
         if (curHp < 1)
         {
@@ -16,7 +24,7 @@ public class Soldier : Enemy
         }
     }
 
-    public override void moveRandom()
+    public override void move()
     {
         if (isMove == true)
         {
@@ -25,7 +33,7 @@ public class Soldier : Enemy
 
         Vector3 Pos = gameObject.transform.position;
         Vector3 scale = gameObject.transform.localScale;
-        base.moveRandom();
+        base.move();
 
         if (Pos.x > targetPos.x)
         {
@@ -44,5 +52,35 @@ public class Soldier : Enemy
         base.GetDamage(_damage);
 
         anim.SetTrigger("Hit");
+    }
+
+    private void shoot()
+    {
+        if (isCheckPlayer == true)
+        {
+            if (isShoot == false)
+            {
+                anim.SetTrigger("Shoot");
+                GameObject obj = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity);
+                Rigidbody rigid = obj.GetComponent<Rigidbody>();
+                GameObject objPlayer = GameObject.Find("Player");
+                isShoot = true;
+            }
+            
+        }
+    }
+
+    private void shootCoolTime()
+    {
+        if (isShoot == true)
+        {
+            shootTime -= Time.deltaTime;
+            if (shootTime < 0)
+            {
+                shootTime = shootTimer;
+                isShoot = false;
+            }
+        }
+        
     }
 }
