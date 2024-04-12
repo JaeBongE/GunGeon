@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Soldier : Enemy
 {
-    private float shootTimer = 0;
+    private float shootTimer = 2;
     private float shootTime = 2;
     private bool isShoot = false;
     [SerializeField] Transform trsMuzzle;
     [SerializeField] GameObject enemyBullet;
-    [SerializeField] private float bulletSpeed = 15f;
+    [SerializeField] private float bulletSpeed = 5f;
 
     public override void Update()
     {
@@ -62,8 +62,11 @@ public class Soldier : Enemy
             {
                 anim.SetTrigger("Shoot");
                 GameObject obj = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity);
-                Rigidbody rigid = obj.GetComponent<Rigidbody>();
+                Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
                 GameObject objPlayer = GameObject.Find("Player");
+                Vector3 moveDir = (targetPos - trsMuzzle.position).normalized;
+                rigid.velocity = moveDir * bulletSpeed;
+                //Vector3.MoveTowards(obj.transform.position, targetPos, bulletSpeed * Time.deltaTime);
                 isShoot = true;
             }
             
