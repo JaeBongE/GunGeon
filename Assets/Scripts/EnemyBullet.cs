@@ -10,6 +10,8 @@ public class EnemyBullet : MonoBehaviour
     {
         if (collision.gameObject.tag == GameTag.PlayerHitBox.ToString())
         {
+            //Player scPlayer = collision.gameObject.GetComponentInParent<Player>();
+            //scPlayer.GetDamage();
             Destroy(gameObject);
         }
     }

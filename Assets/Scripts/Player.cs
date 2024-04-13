@@ -21,17 +21,21 @@ public class Player : MonoBehaviour
     [SerializeField] private float curHp = 0;
 
 
-    [Header("기타")]
+    [Header("총관련")]
     [SerializeField] GameObject hitBox;
     [SerializeField] private Transform trsLeftHand;
     [SerializeField] private Transform trsRightHand;
     private float dashTime = 0.0f;
     private float dashLimitTime = 0.5f;
     private float dashCoolTime = 3.0f;
+    private float dashCoolMaxTime = 3.0f;
     private bool isDashCool = false;
     private GameObject objGun;
     private Transform trsGun;
     private SpriteRenderer sprGun;
+
+
+    [Header("UI")]
     [SerializeField] GameObject reLoadUi;
     [SerializeField] GameObject pisTol;
     private bool isPistol = false;
@@ -76,7 +80,7 @@ public class Player : MonoBehaviour
         checkMousePoint();
         //checkShoot();
         shoot();
-
+        
 
     }
 
@@ -102,9 +106,11 @@ public class Player : MonoBehaviour
     {
         if (dashTime > 0.0f) return;//플레이어가 대쉬 했을 때 리턴
 
+        //Horizontal, Vertical 입력에 따라 물리를 적용해 움직임
         moveDir.x = Input.GetAxisRaw("Horizontal") * moveSpeed;
         moveDir.y = Input.GetAxisRaw("Vertical") * moveSpeed;
         rigid.velocity = moveDir;
+
         anim.SetFloat("Horizontal", moveDir.x);
         anim.SetFloat("Vertical", moveDir.y);
 
@@ -133,10 +139,13 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             dashTime = dashLimitTime;//대쉬를 했을 때 velocitiy가 다른 함수에 적용되지 않게 하기 위함
+            dashCoolTime = dashCoolMaxTime;//대쉬 했을 때 쿨타임 돌게 설계해 UI 표현
 
             gameObject.layer = LayerMask.NameToLayer("Nodamage");
             hitBox.layer = LayerMask.NameToLayer("Nodamage");
             spr.color = new Color(1, 1, 1, 0.4f);
+
+            //캐릭터가 가는 방향에 따라 대쉬 힘의 방향을 결정
             if (moveDir.x > 0)
             {
                 rigid.AddForce(new Vector2(2, 0) * dashPower, ForceMode2D.Impulse);
@@ -161,7 +170,7 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 대쉬 후 무적상태 해제함수
+    /// 무적상태 해제함수
     /// </summary>
     private void returnSituation()
     {
@@ -178,11 +187,14 @@ public class Player : MonoBehaviour
         if (isDashCool == true && dashCoolTime != 0f)
         {
             dashCoolTime -= Time.deltaTime;
+            gameManager.getPlayerDash(dashCoolTime, dashCoolMaxTime, true);//게임매니저로 대쉬 쿨 타임 전달해 UI관리
+
             if (dashCoolTime < 0f)
             {
-                dashCoolTime = 3.0f;
+                dashCoolTime = 0f;
                 isDashCool = false;
             }
+
         }
     }
 
@@ -216,7 +228,7 @@ public class Player : MonoBehaviour
             gunScale.x = -1;
             trsGun.localScale = gunScale;
 
-            if (angle > 270f && angle < 320f)
+            if (angle > 270f && angle < 320f)//총이 위를 향할 때 sortingOrder를 낮춰서 자연스러운 연출 
             {
                 anim.SetBool("LookFront", true);
                 sprGun.sortingOrder = 1;//포폴 문서에 적기
@@ -240,7 +252,7 @@ public class Player : MonoBehaviour
             gunScale.x = 1;
             trsGun.localScale = gunScale;
 
-            if (angle > 40f && angle < 90f)
+            if (angle > 40f && angle < 90f)//총이 위를 향할 때 sortingOrder를 낮춰서 자연스러운 연출
             {
                 anim.SetBool("LookFront", true);
                 sprGun.sortingOrder = 1;
@@ -250,14 +262,14 @@ public class Player : MonoBehaviour
             anim.SetBool("AimLeft", false);
         }
 
-        if (distanceMouseToPlayer.y > 0)
+        if (distanceMouseToPlayer.y > 0)//총의 에임이 위로 향할때
         {
             if (trsGun == null) return;
 
             anim.SetBool("AimFront", true);
             anim.SetBool("AimBehind", false);
         }
-        else if (distanceMouseToPlayer.y < 0)
+        else if (distanceMouseToPlayer.y < 0)//쳥의 에임이 아래로 향할때
         {
             if (trsGun == null) return;
 
@@ -265,6 +277,7 @@ public class Player : MonoBehaviour
             anim.SetBool("AimBehind", true);
         }
 
+        //손의 각도를 통해 총이 에임을 따라가게 만듬
         trsRightHand.localEulerAngles = new Vector3(trsRightHand.localEulerAngles.x, trsRightHand.localEulerAngles.y, angle);
         trsLeftHand.localEulerAngles = new Vector3(trsLeftHand.localEulerAngles.x, trsLeftHand.localEulerAngles.y, angle);
 
@@ -277,10 +290,10 @@ public class Player : MonoBehaviour
     {
         if (trsGun == null) return;
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))//마우스 왼쪽 버튼을 누르면
         {
             Gun gun = trsGun.GetComponent<Gun>();
-            gun.CreateBullet();
+            gun.CreateBullet();//총알을 발사
         }
     }
 
@@ -330,11 +343,19 @@ public class Player : MonoBehaviour
         {
             curHp--;
 
-            gameManager.getPlayerHp(maxHp, curHp);
-            if (curHp < 1)
+            if (curHp < 1)//피가 0이 되면 
             {
-                anim.SetTrigger("isDeath");
+                anim.SetTrigger("isDeath");//죽는다
             }
+
+            gameObject.layer = LayerMask.NameToLayer("Nodamage");//한대 맞으면 레이어를 바꿔줘서 다단히트로 들어오는 것을 방지 및 빨간색 히트 연출
+            hitBox.layer = LayerMask.NameToLayer("Nodamage");
+            spr.color = Color.red;
+
+            gameManager.getPlayerHp(maxHp, curHp);//게임매니저에 체력 상태를 전달해 UI표시
+
+            Invoke("returnSituation", 0.3f);//원래 상태 복귀
+
         }
     }
 

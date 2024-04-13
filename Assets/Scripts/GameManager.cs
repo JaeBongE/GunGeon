@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image hp1;
     private float maxHp;
     private float curHp;
+    [SerializeField] Image dashImage;
+    private float dashCoolTime;
+    private float dashCoolMaxTime;
+    private bool isDash = false;
+    [SerializeField] TMP_Text tmpDashCool;
 
     GameObject[] enemies;
     [SerializeField] GameObject potal;
@@ -33,14 +38,16 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
-        gunUi.gameObject.SetActive(false);
     }
 
     void Start()
     {
         player = Player.Instance;
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");//enemy태그의 게임오브젝트를 찾아 넣는다
+        gunUi.gameObject.SetActive(false);
         potal.SetActive(false);
+        dashImage.fillAmount = 0;
+        tmpDashCool.text = "";
     }
 
     void Update()
@@ -48,10 +55,14 @@ public class GameManager : MonoBehaviour
         setGunUi();
         setGunBulletUi();
         setPlayerHp();
+        setPlayerDash();
         checkEnemy();
     }
 
 
+    /// <summary>
+    /// 총이 있을 때 UI에 총을 표시
+    /// </summary>
     private void setGunUi()
     {
         if (isGunImageOn == true)
@@ -60,12 +71,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 총알을 화면에 표시하는 UI
+    /// </summary>
     private void setGunBulletUi()
     {
         gunBulletUi.text = ($"{curBullet} / {maxBullet}");
     }
 
-    private void setPlayerHp()
+    /// <summary>
+    /// PlayerHP를 받아와서 UI에 체력을 표시
+    /// </summary>
+    private void setPlayerHp()//체력의 최대치가 늘어난다면 수정필요
     {
         if (curHp < maxHp)
         {
@@ -81,6 +98,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Dash쿨타임 UI 관리
+    /// </summary>
+    private void setPlayerDash()
+    {
+        if (isDash == true)
+        {
+            dashImage.fillAmount = dashCoolTime / dashCoolMaxTime;
+            tmpDashCool.text = ($"{dashCoolTime.ToString("F1")}");
+
+            if (dashCoolTime < 0f)
+            {
+                tmpDashCool.text = "";
+            }
+        }
+    }
+
+    /// <summary>
+    /// 화면상 enemy가 있는지 확인 
+    /// </summary>
     private void checkEnemy()
     {
         int count = enemies.Length;
@@ -94,18 +131,28 @@ public class GameManager : MonoBehaviour
         }
         //allClear
 
-        if (allClear == true)
+        if (allClear == true)//enemy가 없다면 포탈을 연다
         {
             potal.SetActive(true);
         }
     }
 
+    /// <summary>
+    /// 총으로부터 총알의 정보를 받아온다
+    /// </summary>
+    /// <param name="_curBullet"> 현재 총알의 수</param>
+    /// <param name="_maxBullet"> 최대 총알의 수</param>
     public void setBulletInfor(float _curBullet, float _maxBullet)
     {
         curBullet = _curBullet;
         maxBullet = _maxBullet;
     }
 
+    /// <summary>
+    /// 총을 획득했을 때, 총의 정보를 받아와 UI에 총의 이미지를 표시하고 스테이지1에게 진행가능을 알린다.
+    /// </summary>
+    /// <param name="_gun"></param>
+    /// <param name="_isGun"></param>
     public void setGunInfor(GameObject _gun, bool _isGun)
     {
         SpriteRenderer spr = _gun.GetComponent<SpriteRenderer>();
@@ -119,12 +166,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Player의 체력 정보를 받아온다
+    /// </summary>
+    /// <param name="_maxHp"> 최대 체력</param>
+    /// <param name="_curHp"> 현재 체력</param>
     public void getPlayerHp(float _maxHp, float _curHp)
     {
         curHp = _curHp;
         maxHp = _maxHp;
     }
 
+    /// <summary>
+    /// Player의 대쉬 쿨타임 정보를 받아온다
+    /// </summary>
+    /// <param name="_dashCoolTime"></param>
+    /// <param name="_dashCoolMaxTime"></param>
+    /// <param name="_isDash"></param>
+    public void getPlayerDash(float _dashCoolTime, float _dashCoolMaxTime, bool _isDash)
+    {
+        dashCoolTime = _dashCoolTime;
+        dashCoolMaxTime = _dashCoolMaxTime;
+        isDash = _isDash;
+    }
+
+    /// <summary>
+    /// Enemy가 사라졌을 때 자신을 배열에서 삭제하고 확인한다
+    /// </summary>
+    /// <param name="_obj"></param>
     public void CheckoutEnemy(GameObject _obj)
     {
         int count = enemies.Length;

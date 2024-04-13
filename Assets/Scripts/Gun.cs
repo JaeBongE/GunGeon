@@ -75,6 +75,9 @@ public class Gun : MonoBehaviour
         reLoad();
     }
 
+    /// <summary>
+    /// 총의 재장전 이미지 가져오기
+    /// </summary>
     private void checkGunUi()
     {
         if (reLoadUi == null)
@@ -86,6 +89,9 @@ public class Gun : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어가 e를 눌렀을 때 총이 장비되고 총의 정보를 등록한다
+    /// </summary>
     private void getGun()
     {
         //if (type == GunType.Pistol) return;
@@ -102,35 +108,44 @@ public class Gun : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 총알을 발사하는 함수
+    /// </summary>
     public void CreateBullet()
     {
-        if (isReload == true) return;
+        if (isReload == true) return;//장전시 발사x
 
-        if (isShoot == true) return;
+        if (isShoot == true) return;//발사 딜레이
 
+        //총알의 물리를 통해 발사 구현
         GameObject obj = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity);
         Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
 
+        //muzzle위치에서 마우스의 위치로 총알을 발사
         Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         Vector3 shootDir = (mousePos - trsMuzzle.position).normalized;
 
         //rigid.AddForce(shootDir * bulletSpeed, ForceMode2D.Impulse);
-        rigid.velocity = shootDir * bulletSpeed;
+        rigid.velocity = shootDir * bulletSpeed;//총알의 물리를 이용해 원하는 방향으로 발사
 
+        //총알이 줄어들고, 발사 딜레이를 준다
         curBullet--;
         isShoot = true;
 
-        gameManager.setBulletInfor(curBullet, maxBullet);
+        gameManager.setBulletInfor(curBullet, maxBullet);//게임매니저로 총알 정보 전달
 
+        //총알이 0이 되면 재장전
         if (curBullet <= 0f)
         {
-            isReload = true;
+            isReload = true;//재장전 트리거
         }
 
     }
 
+    /// <summary>
+    /// 총알의 발사 딜레이
+    /// </summary>
     private void gunDelay()
     {
         if (isShoot == true)
@@ -144,15 +159,19 @@ public class Gun : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 총알을 다 쓰거나 r을 눌렀을 때 재장전
+    /// </summary>
     private void reLoad()
     {
         if (curBullet == maxBullet) return;
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            isReload = true;
+            isReload = true;//재장전 트리거
         }
         
+        //재장전시 UI, 총알 갯수 표현
         if (isReload == true)
         {
             reLoadUi.SetActive(true);
@@ -167,6 +186,7 @@ public class Gun : MonoBehaviour
                 reLoadUi.SetActive(false);
             }
             
+            //재장전 이미지 표시
             scReload.setReload(reloadTimer, reloadMaxTimer);
         }
     }

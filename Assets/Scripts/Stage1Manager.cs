@@ -15,7 +15,7 @@ public class Stage1Manager : MonoBehaviour
 
     void Update()
     {
-        if (isGetGun == true)
+        if (isGetGun == true)//총을 얻었다면
         {
             if (wall == null) return;
 
@@ -27,11 +27,16 @@ public class Stage1Manager : MonoBehaviour
                 //Destroy(wall);
             }
 
+            //벽이 위로 이동하면서 문이 열린다
             wallY += Time.deltaTime;
             wall.transform.position = new Vector3(wall.transform.position.x, wallY, wall.transform.position.z);
         }
     }
 
+    /// <summary>
+    /// 스테이지1에서 총을 얻었는지 확인 후 진행
+    /// </summary>
+    /// <param name="_isGetGun"></param>
     public void isContinue(bool _isGetGun)
     {
         isGetGun = _isGetGun;
