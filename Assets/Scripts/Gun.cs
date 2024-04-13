@@ -117,8 +117,11 @@ public class Gun : MonoBehaviour
 
         if (isShoot == true) return;//발사 딜레이
 
+        GameObject bullets = GameObject.Find("Bullets");
+        Transform trsBullets = bullets.transform;
+
         //총알의 물리를 통해 발사 구현
-        GameObject obj = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity);
+        GameObject obj = Instantiate(objBullet, trsMuzzle.position, Quaternion.identity, trsBullets);
         Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
 
         //muzzle위치에서 마우스의 위치로 총알을 발사

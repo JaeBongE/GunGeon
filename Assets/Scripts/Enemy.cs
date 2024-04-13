@@ -28,14 +28,14 @@ public class Enemy : MonoBehaviour
 
     public virtual void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
+        //if (Instance == null)
+        //{
+        //    Instance = this;
+        //}
+        //else
+        //{
+        //    Destroy(this);
+        //}
 
         curHp = maxHp;
         anim = GetComponent<Animator>();

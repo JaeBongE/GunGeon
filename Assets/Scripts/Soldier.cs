@@ -86,8 +86,11 @@ public class Soldier : Enemy
             readyShoot = true;
             if (isShoot == false)
             {
+                GameObject bullets = GameObject.Find("Bullets");
+                Transform trsBullets = bullets.transform;
+
                 anim.SetTrigger("Shoot");
-                GameObject obj = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity);
+                GameObject obj = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity, trsBullets);
                 Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
 
                 GameObject objPlayer = GameObject.Find("Player");

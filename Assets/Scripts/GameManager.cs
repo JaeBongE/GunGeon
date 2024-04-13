@@ -9,11 +9,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     Player player;
 
+    [Header("총")]
     [SerializeField] Image gunUi;
     [SerializeField] TMP_Text gunBulletUi;
     private float maxBullet;
     private float curBullet;
     private bool isGunImageOn = false;
+
+    [Header("플레이어")]
     [SerializeField] Image hp3;
     [SerializeField] Image hp2;
     [SerializeField] Image hp1;
@@ -24,6 +27,10 @@ public class GameManager : MonoBehaviour
     private float dashCoolMaxTime;
     private bool isDash = false;
     [SerializeField] TMP_Text tmpDashCool;
+
+    [Header("기타")]
+    [SerializeField] GameObject pauseUI;
+    private bool isPauseOpen = false;
 
     GameObject[] enemies;
     [SerializeField] GameObject potal;
@@ -48,6 +55,7 @@ public class GameManager : MonoBehaviour
         potal.SetActive(false);
         dashImage.fillAmount = 0;
         tmpDashCool.text = "";
+
     }
 
     void Update()
@@ -57,6 +65,7 @@ public class GameManager : MonoBehaviour
         setPlayerHp();
         setPlayerDash();
         checkEnemy();
+        showPauseUI();
     }
 
 
@@ -207,5 +216,33 @@ public class GameManager : MonoBehaviour
         }
 
         checkEnemy();
+    }
+
+    private void showPauseUI()
+    {
+        PauseUI scPause = pauseUI.GetComponent<PauseUI>();
+        GameObject objPauseUI = scPause.setPauseUI();
+
+        //if (isPauseOpen == false)
+        //{
+        //    objPauseUI.SetActive(false);
+        //}
+        if (isPauseOpen == false && Input.GetKeyDown(KeyCode.Escape))
+        {
+            objPauseUI.SetActive(true);
+            Time.timeScale = 0f;
+            isPauseOpen = true;
+        }
+        else if (isPauseOpen == true && Input.GetKeyDown(KeyCode.Escape))
+        {
+            objPauseUI.SetActive(false);
+            Time.timeScale = 1f;
+            isPauseOpen = false;
+        }
+    }
+
+    public void checkPauseUI(bool _isOpen)
+    {
+        isPauseOpen = _isOpen;
     }
 }
