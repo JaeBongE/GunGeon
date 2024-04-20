@@ -18,6 +18,11 @@ public class PlayerBullet : MonoBehaviour
             scEnemy.GetDamage(damage);
             Destroy(gameObject);
         }
+        
+        if (collision.gameObject.tag == GameTag.Wall.ToString())
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnBecameInvisible()

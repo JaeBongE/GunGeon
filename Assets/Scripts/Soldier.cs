@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Soldier : Enemy
 {
+    SpriteRenderer spr;
+
     private float shootTimer = 2;
     private float shootTime = 2;
     private bool isShoot = false;
@@ -19,6 +21,7 @@ public class Soldier : Enemy
     public override void Awake()
     {
         base.Awake();
+        spr =  GetComponent<SpriteRenderer>();
         isShoot = true;
     }
 
@@ -72,6 +75,13 @@ public class Soldier : Enemy
         base.GetDamage(_damage);
 
         anim.SetTrigger("Hit");
+        spr.color = Color.red;
+        Invoke("retrunColor", 0.7f);
+    }
+
+    private void retrunColor()
+    {
+        spr.color = Color.white;
     }
 
     /// <summary>

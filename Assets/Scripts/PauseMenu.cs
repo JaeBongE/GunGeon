@@ -23,11 +23,6 @@ public class PauseMenu : MonoBehaviour
         exit();
     }
 
-    void Update()
-    {
-        
-    }
-
     private void exit()
     {
         btnExit.onClick.AddListener(() =>

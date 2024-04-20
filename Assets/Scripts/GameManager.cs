@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     [Header("±‚≈∏")]
     [SerializeField] GameObject pauseUI;
+    [SerializeField] GameObject oneMoreUI;
     private bool isPauseOpen = false;
 
     GameObject[] enemies;
@@ -235,6 +236,7 @@ public class GameManager : MonoBehaviour
         }
         else if (isPauseOpen == true && Input.GetKeyDown(KeyCode.Escape))
         {
+            oneMoreUI.SetActive(false);
             objPauseUI.SetActive(false);
             Time.timeScale = 1f;
             isPauseOpen = false;
