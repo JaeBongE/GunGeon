@@ -19,7 +19,6 @@ public class MenuUI : MonoBehaviour
     [SerializeField] Button btnStart;
     [SerializeField] Button btnContinue;
     [SerializeField] Button btnExit;
-    private bool isExit = false;
     [SerializeField] GameObject oneMore;
 
     private void Awake()

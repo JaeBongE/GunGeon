@@ -241,6 +241,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
             isPauseOpen = false;
         }
+
     }
 
     public void checkPauseUI(bool _isOpen)
