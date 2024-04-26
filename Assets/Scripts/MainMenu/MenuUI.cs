@@ -80,7 +80,9 @@ public class MenuUI : MonoBehaviour
     {
         btnStart.onClick.AddListener(() => 
         {
-            SceneManager.LoadSceneAsync(1);
+            //SceneManager.LoadSceneAsync(1);
+            //LoadingSceneController.Instance.LoadScene("Stage1");
+            LoadingBar.LoadScene("Stage1");
         });
         
         btnContinue.onClick.AddListener(() => 
