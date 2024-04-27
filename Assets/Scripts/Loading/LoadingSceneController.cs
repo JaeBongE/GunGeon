@@ -50,10 +50,16 @@ public class LoadingSceneController : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
+        
         gameObject.SetActive(true);
         SceneManager.sceneLoaded += OnSceneLoaded;
         loadSceneName = sceneName;
         StartCoroutine(LoadSceneProcess());
+
+        if (loadSceneName != "MainManu")
+        {
+            PlayerPrefs.SetString("Continue", loadSceneName);
+        }
     }
 
     private IEnumerator LoadSceneProcess()
@@ -90,6 +96,10 @@ public class LoadingSceneController : MonoBehaviour
         if (arg0.name == loadSceneName)
         {
             StartCoroutine(Fade(false));
+
+            //PlayerPrefs.SetString("Continue", loadSceneName);
+            //PlayerPrefs.has
+
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
@@ -104,11 +114,9 @@ public class LoadingSceneController : MonoBehaviour
             canvasGroup.alpha = _isFadeIn ? Mathf.Lerp(0f, 1f, timer) : Mathf.Lerp(1f, 0f, timer);
         }
 
-        if (_isFadeIn)
+        if (_isFadeIn == false)
         {
             gameObject.SetActive(false);
         }
     }
-
-
 }

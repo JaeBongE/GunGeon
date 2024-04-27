@@ -19,6 +19,10 @@ public class Stage1Manager : MonoBehaviour
     {
         checkGetGun();
         checkDeathEnemy();
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            LoadingSceneController.Instance.LoadScene("Stage2");
+        }
     }
 
     private void checkGetGun()

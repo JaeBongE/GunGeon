@@ -14,6 +14,7 @@ public class MenuUI : MonoBehaviour
     private bool isBlink = false;
     [SerializeField] GameObject MenuBtns;
     private bool isPressAnyKey = false;
+    [SerializeField] GameObject Textdata;
 
     [Header("¹öÆ°")]
     [SerializeField] Button btnStart;
@@ -26,6 +27,7 @@ public class MenuUI : MonoBehaviour
         PressAnyBtn.SetActive(true);
         MenuBtns.SetActive(false);
         oneMore.SetActive(false);
+        Textdata.SetActive(false);
     }
 
     private void Start()
@@ -81,13 +83,25 @@ public class MenuUI : MonoBehaviour
         btnStart.onClick.AddListener(() => 
         {
             //SceneManager.LoadSceneAsync(1);
-            //LoadingSceneController.Instance.LoadScene("Stage1");
-            LoadingBar.LoadScene("Stage1");
+            LoadingSceneController.Instance.LoadScene("Stage1");
+            Destroy(gameObject);
+            //LoadingBar.LoadScene("Stage1");
         });
         
         btnContinue.onClick.AddListener(() => 
         {
+            if (PlayerPrefs.HasKey("Continue") == false)
+            {
+                Textdata.SetActive(true);
+                Invoke("outText", 0.5f);
+            }
+            else
+            {
 
+                string loadScene = PlayerPrefs.GetString("Continue");
+                LoadingSceneController.Instance.LoadScene(loadScene);
+                Destroy(gameObject);
+            }
         });
 
         btnExit.onClick.AddListener(() =>
@@ -96,8 +110,8 @@ public class MenuUI : MonoBehaviour
         });
     }
 
-    public void checkExit()
+    private void outText()
     {
-
+        Textdata.SetActive(false);
     }
 }

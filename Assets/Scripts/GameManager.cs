@@ -10,31 +10,33 @@ public class GameManager : MonoBehaviour
     Player player;
 
     [Header("총")]
-    [SerializeField] Image gunUi;
-    [SerializeField] TMP_Text gunBulletUi;
+    Image gunUi;
+    TMP_Text gunBulletUi;
     private float maxBullet;
     private float curBullet;
     private bool isGunImageOn = false;
 
     [Header("플레이어")]
-    [SerializeField] Image hp3;
-    [SerializeField] Image hp2;
-    [SerializeField] Image hp1;
+    Image hp3;
+    Image hp2;
+    Image hp1;
     private float maxHp;
     private float curHp;
-    [SerializeField] Image dashImage;
+    private bool isDeath = false;
+    Image dashImage;
     private float dashCoolTime;
     private float dashCoolMaxTime;
     private bool isDash = false;
-    [SerializeField] TMP_Text tmpDashCool;
+    TMP_Text tmpDashCool;
 
     [Header("기타")]
-    [SerializeField] GameObject pauseUI;
-    [SerializeField] GameObject oneMoreUI;
+    GameObject pauseUI;
+    GameObject gameOverUI;
+    GameObject oneMoreUI;
     private bool isPauseOpen = false;
 
     GameObject[] enemies;
-    [SerializeField] GameObject potal;
+    GameObject portal;
 
     private void Awake()
     {
@@ -51,22 +53,68 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         player = Player.Instance;
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");//enemy태그의 게임오브젝트를 찾아 넣는다
-        gunUi.gameObject.SetActive(false);
-        potal.SetActive(false);
-        dashImage.fillAmount = 0;
-        tmpDashCool.text = "";
 
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");//enemy태그의 게임오브젝트를 찾아 넣는다
+        
+        isDeath = false;
     }
 
     void Update()
     {
+        setUI();
+
         setGunUi();
         setGunBulletUi();
-        setPlayerHp();
+
+        //setPlayerHp();
+
         setPlayerDash();
+
         checkEnemy();
+
         showPauseUI();
+        //playerDeath();
+    }
+
+    private void setUI()
+    {
+        if (gunUi == null)
+        {
+            GameObject objPlayerUI = GameObject.Find("PlayerUI");
+            if (objPlayerUI == null) return;
+
+            PlayerUI scPlayerUI = objPlayerUI.GetComponent<PlayerUI>();
+
+            (Image _gunUi, TMP_Text _gunBulletUi) gunUI = scPlayerUI.GetGunUI();
+            gunUi = gunUI._gunUi;
+            gunBulletUi = gunUI._gunBulletUi;
+
+            gunUi.gameObject.SetActive(false);
+
+            (Image _hp3, Image _hp2, Image _hp1) hpUI = scPlayerUI.GetHpUI();
+            hp3 = hpUI._hp3;
+            hp2 = hpUI._hp2;
+            hp1 = hpUI._hp1;
+
+            (Image _dashImage, TMP_Text _tmpDashCool) dashUI = scPlayerUI.GetDashUI();
+            dashImage = dashUI._dashImage;
+            tmpDashCool = dashUI._tmpDashCool;
+
+            dashImage.fillAmount = 0;
+            tmpDashCool.text = "";
+
+            GameObject objPauseUI = GameObject.Find("PauseUI");
+            if (objPauseUI == null) return;
+
+            PauseUI scPauseUI = objPauseUI.GetComponent<PauseUI>();
+            (GameObject _pauseUI, GameObject _gameoverUI, GameObject _oneMoreUI) pause = scPauseUI.GetPauseUI();
+            pauseUI = pause._pauseUI;
+            gameOverUI = pause._gameoverUI;
+            oneMoreUI = pause._oneMoreUI;
+
+            portal = GameObject.Find("Portal");
+            portal.SetActive(false);
+        }
     }
 
 
@@ -92,7 +140,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// PlayerHP를 받아와서 UI에 체력을 표시
     /// </summary>
-    private void setPlayerHp()//체력의 최대치가 늘어난다면 수정필요
+    public void SetPlayerHpUI()//체력의 최대치가 늘어난다면 수정필요
     {
         if (curHp < maxHp)
         {
@@ -103,6 +151,8 @@ public class GameManager : MonoBehaviour
                 if (curHp == 0)
                 {
                     hp1.gameObject.SetActive(false);
+                    isDeath = true;
+                    playerDeath();
                 }
             }
         }
@@ -143,7 +193,7 @@ public class GameManager : MonoBehaviour
 
         if (allClear == true)//enemy가 없다면 포탈을 연다
         {
-            potal.SetActive(true);
+            portal.SetActive(true);
         }
     }
 
@@ -221,8 +271,6 @@ public class GameManager : MonoBehaviour
 
     private void showPauseUI()
     {
-        PauseUI scPause = pauseUI.GetComponent<PauseUI>();
-        GameObject objPauseUI = scPause.setPauseUI();
 
         //if (isPauseOpen == false)
         //{
@@ -230,18 +278,28 @@ public class GameManager : MonoBehaviour
         //}
         if (isPauseOpen == false && Input.GetKeyDown(KeyCode.Escape))
         {
-            objPauseUI.SetActive(true);
+            pauseUI.SetActive(true);
             Time.timeScale = 0f;
             isPauseOpen = true;
         }
         else if (isPauseOpen == true && Input.GetKeyDown(KeyCode.Escape))
         {
             oneMoreUI.SetActive(false);
-            objPauseUI.SetActive(false);
+            pauseUI.SetActive(false);
             Time.timeScale = 1f;
             isPauseOpen = false;
         }
 
+    }
+
+    private void playerDeath()
+    {
+
+        if (isDeath == true)
+        {
+            Time.timeScale = 0f;
+            gameOverUI.SetActive(true);
+        }
     }
 
     public void checkPauseUI(bool _isOpen)
