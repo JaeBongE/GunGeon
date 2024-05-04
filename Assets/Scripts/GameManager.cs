@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
             gunUi = gunUI._gunUi;
             gunBulletUi = gunUI._gunBulletUi;
 
-            gunUi.gameObject.SetActive(false);
+            //gunUi.gameObject.SetActive(false);
 
             (Image _hp3, Image _hp2, Image _hp1) hpUI = scPlayerUI.GetHpUI();
             hp3 = hpUI._hp3;
@@ -239,8 +239,8 @@ public class GameManager : MonoBehaviour
     public void SetGunInfor(GameObject _gun, bool _isGun)
     {
         SpriteRenderer spr = _gun.GetComponent<SpriteRenderer>();
-        gunUi.sprite = spr.sprite;
         gunUi.gameObject.SetActive(true);
+        gunUi.sprite = spr.sprite;
 
         if (_isGun == true)
         {
