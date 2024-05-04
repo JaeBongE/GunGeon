@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private float maxBullet;
     private float curBullet;
     private bool isGunImageOn = false;
+    [SerializeField] List<GameObject> fabWeapon;
 
     [Header("플레이어")]
     Image hp3;
@@ -55,16 +56,23 @@ public class GameManager : MonoBehaviour
         player = Player.Instance;
 
         enemies = GameObject.FindGameObjectsWithTag("Enemy");//enemy태그의 게임오브젝트를 찾아 넣는다
-        
+
         isDeath = false;
+
+        if (PlayerPrefs.HasKey("curBullet") && PlayerPrefs.HasKey("maxBullet"))
+        {
+            curBullet = PlayerPrefs.GetFloat("curBullet");
+            maxBullet = PlayerPrefs.GetFloat("maxBullet");
+        }
     }
 
     void Update()
     {
         setUI();
 
-        setGunUi();
+        //setGunUi();
         setGunBulletUi();
+        setPlayerHpUI();
 
         //setPlayerHp();
 
@@ -121,13 +129,13 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 총이 있을 때 UI에 총을 표시
     /// </summary>
-    private void setGunUi()
-    {
-        if (isGunImageOn == true)
-        {
-            gunUi.gameObject.SetActive(true);
-        }
-    }
+    //private void setGunUi()
+    //{
+    //    if (isGunImageOn == true)
+    //    {
+    //        gunUi.gameObject.SetActive(true);
+    //    }
+    //}
 
     /// <summary>
     /// 총알을 화면에 표시하는 UI
@@ -140,22 +148,34 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// PlayerHP를 받아와서 UI에 체력을 표시
     /// </summary>
-    public void SetPlayerHpUI()//체력의 최대치가 늘어난다면 수정필요
+    private void setPlayerHpUI()//체력의 최대치가 늘어난다면 수정필요
     {
-        if (curHp < maxHp)
+        if (gunUi == null) return;
+
+        if (curHp == 2)
         {
+            hp1.gameObject.SetActive(true); 
+            hp2.gameObject.SetActive(true);
             hp3.gameObject.SetActive(false);
-            if (curHp < maxHp - 1)
-            {
-                hp2.gameObject.SetActive(false);
-                if (curHp == 0)
-                {
-                    hp1.gameObject.SetActive(false);
-                    isDeath = true;
-                    playerDeath();
-                }
-            }
         }
+
+        if (curHp == 1)
+        {
+            hp1.gameObject.SetActive(true);
+            hp2.gameObject.SetActive(false);
+            hp3.gameObject.SetActive(false);
+        }
+
+        if (curHp == 0)
+        {
+            hp1.gameObject.SetActive(false);
+            hp2.gameObject.SetActive(false);
+            hp3.gameObject.SetActive(false);
+            isDeath = true;
+            playerDeath();
+        }
+
+
     }
 
     /// <summary>
@@ -202,10 +222,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="_curBullet"> 현재 총알의 수</param>
     /// <param name="_maxBullet"> 최대 총알의 수</param>
-    public void setBulletInfor(float _curBullet, float _maxBullet)
+    public void SetBulletInfor(float _curBullet, float _maxBullet)
     {
-        curBullet = _curBullet;
-        maxBullet = _maxBullet;
+        PlayerPrefs.SetFloat("curBullet", _curBullet);
+        PlayerPrefs.SetFloat("maxBullet", _maxBullet);
+
+        curBullet = PlayerPrefs.GetFloat("curBullet");
+        maxBullet = PlayerPrefs.GetFloat("maxBullet");
     }
 
     /// <summary>
@@ -213,14 +236,18 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="_gun"></param>
     /// <param name="_isGun"></param>
-    public void setGunInfor(GameObject _gun, bool _isGun)
+    public void SetGunInfor(GameObject _gun, bool _isGun)
     {
         SpriteRenderer spr = _gun.GetComponent<SpriteRenderer>();
         gunUi.sprite = spr.sprite;
+        gunUi.gameObject.SetActive(true);
+
         if (_isGun == true)
         {
             isGunImageOn = true;
+            
             GameObject objStage1Manager = GameObject.Find("Stage1Manager");
+            if (objStage1Manager == null) return;
             Stage1Manager scStage1 = objStage1Manager.GetComponent<Stage1Manager>();
             scStage1.isContinue(isGunImageOn);
         }
@@ -231,10 +258,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="_maxHp"> 최대 체력</param>
     /// <param name="_curHp"> 현재 체력</param>
-    public void getPlayerHp(float _maxHp, float _curHp)
+    public void SetPlayerHp(float _maxHp, float _curHp)
     {
         curHp = _curHp;
         maxHp = _maxHp;
+        setPlayerHpUI();
     }
 
     /// <summary>
@@ -243,7 +271,7 @@ public class GameManager : MonoBehaviour
     /// <param name="_dashCoolTime"></param>
     /// <param name="_dashCoolMaxTime"></param>
     /// <param name="_isDash"></param>
-    public void getPlayerDash(float _dashCoolTime, float _dashCoolMaxTime, bool _isDash)
+    public void GetPlayerDash(float _dashCoolTime, float _dashCoolMaxTime, bool _isDash)
     {
         dashCoolTime = _dashCoolTime;
         dashCoolMaxTime = _dashCoolMaxTime;
@@ -302,8 +330,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void checkPauseUI(bool _isOpen)
+    public void CheckPauseUI(bool _isOpen)
     {
         isPauseOpen = _isOpen;
     }
+
+    public GameObject GetWeapon(Player.typeGun _value)
+    {
+        return fabWeapon[(int)_value];
+    }
+
 }

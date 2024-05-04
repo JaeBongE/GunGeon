@@ -37,7 +37,6 @@ public class Player : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] GameObject reLoadUi;
-    [SerializeField] GameObject pisTol;
     private bool isPistol = false;
     [SerializeField] Transform trsBack;
     public GameObject GetReloadUi()
@@ -60,14 +59,40 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         reLoadUi.SetActive(false);
-        curHp = maxHp;
         //trsGun = gameObject.transform.Find("Pistol");
+
+        if (PlayerPrefs.HasKey("CurHP") == true)
+        {
+            curHp = PlayerPrefs.GetFloat("CurHP");
+        }
+        else
+        {
+            curHp = maxHp;
+        }
+
+        //if (trsLeftHand.GetChild(0).gameObject != null)
+        //{
+        //    GameObject _gun = trsLeftHand.GetChild(0).gameObject;
+        //    if (_gun != null)
+        //    {
+        //        objGun = _gun;
+
+        //        objGun.transform.SetParent(trsLeftHand);
+        //        objGun.transform.localPosition = Vector3.zero;
+
+        //        trsGun = objGun.transform;
+        //        sprGun = trsGun.GetComponent<SpriteRenderer>();
+
+        //        isPistol = true;
+        //    }
+        //}
     }
 
     void Start()
     {
         mainCam = Camera.main;
         gameManager = GameManager.Instance;
+        gameManager.SetPlayerHp(maxHp, curHp);
     }
 
     void Update()
@@ -80,7 +105,7 @@ public class Player : MonoBehaviour
         checkMousePoint();
         //checkShoot();
         shoot();
-        
+
 
     }
 
@@ -187,7 +212,7 @@ public class Player : MonoBehaviour
         if (isDashCool == true && dashCoolTime != 0f)
         {
             dashCoolTime -= Time.deltaTime;
-            gameManager.getPlayerDash(dashCoolTime, dashCoolMaxTime, true);//게임매니저로 대쉬 쿨 타임 전달해 UI관리
+            gameManager.GetPlayerDash(dashCoolTime, dashCoolMaxTime, true);//게임매니저로 대쉬 쿨 타임 전달해 UI관리
 
             if (dashCoolTime < 0f)
             {
@@ -297,42 +322,76 @@ public class Player : MonoBehaviour
         }
     }
 
+    public enum typeGun
+    {
+        Pistol,
+        Rifle,
+    }
+
+    public void GetGun(typeGun _value)
+    {
+        Destroy(objGun);
+
+        objGun = Instantiate(gameManager.GetWeapon(_value));
+        objGun.transform.SetParent(trsLeftHand);
+        objGun.transform.localPosition = Vector3.zero;
+
+        trsGun = objGun.transform;
+        sprGun = trsGun.GetComponent<SpriteRenderer>();
+
+        isPistol = true;
+        
+    }
 
     /// <summary>
     /// 총을 획득하는 함수 *미완
     /// </summary>
     /// <param name="_gun"></param>
-    public void GetGun(GameObject _gun)
-    {
-        if (_gun.name == "Pistol")
-        {
-            _gun.transform.SetParent(trsLeftHand);
-            _gun.transform.localPosition = Vector3.zero;
+    //public void GetGun(GameObject _gun)
+    //{
+    //    if (objGun != null) return;
 
-            trsGun = _gun.transform;
-            sprGun = trsGun.GetComponent<SpriteRenderer>();
+    //    Destroy(objGun);
 
-            isPistol = true;
-        }
+    //    objGun = _gun;
+    //    objGun.transform.SetParent(trsLeftHand);
+    //    objGun.transform.localPosition = Vector3.zero;
 
-        if (_gun.name != "Pistol" && isPistol == true)
-        {
-            trsRightHand.localEulerAngles = Vector3.zero;
-            trsLeftHand.localEulerAngles = Vector3.zero;
-            pisTol.transform.SetParent(trsBack);
-            pisTol.SetActive(false);
+    //    trsGun = objGun.transform;
+    //    sprGun = trsGun.GetComponent<SpriteRenderer>();
 
-            _gun.transform.SetParent(trsLeftHand);
-            _gun.transform.localPosition = Vector3.zero;
+    //    isPistol = true;
 
-            trsGun = _gun.transform;
-            sprGun = trsGun.GetComponent<SpriteRenderer>();
-        }
 
-        objGun = _gun;
 
-        gameManager.setGunInfor(objGun, true);
-    }
+    //    //if (_gun.name == "Pistol")
+    //    //{
+    //    //    _gun.transform.SetParent(trsLeftHand);
+    //    //    _gun.transform.localPosition = Vector3.zero;
+
+    //    //    trsGun = _gun.transform;
+    //    //    sprGun = trsGun.GetComponent<SpriteRenderer>();
+
+    //    //    isPistol = true;
+    //    //}
+
+    //    //if (_gun.name != "Pistol" && isPistol == true)
+    //    //{
+    //    //    trsRightHand.localEulerAngles = Vector3.zero;
+    //    //    trsLeftHand.localEulerAngles = Vector3.zero;
+    //    //    pisTol.transform.SetParent(trsBack);
+    //    //    pisTol.SetActive(false);
+
+    //    //    _gun.transform.SetParent(trsLeftHand);
+    //    //    _gun.transform.localPosition = Vector3.zero;
+
+    //    //    trsGun = _gun.transform;
+    //    //    sprGun = trsGun.GetComponent<SpriteRenderer>();
+    //    //}
+
+
+    //    //gameManager.SetGunInfor(_gun, true);
+    //}
 
     /// <summary>
     /// 적에게 닿으면 hp가 1씩 달고 0이 되면 죽는 함수
@@ -342,6 +401,7 @@ public class Player : MonoBehaviour
         if (curHp > 0)
         {
             curHp--;
+            PlayerPrefs.SetFloat("CurHP", curHp);
 
             if (curHp < 1)//피가 0이 되면 
             {
@@ -352,8 +412,8 @@ public class Player : MonoBehaviour
             hitBox.layer = LayerMask.NameToLayer("Nodamage");
             spr.color = Color.red;
 
-            gameManager.getPlayerHp(maxHp, curHp);//게임매니저에 체력 상태를 전달해 UI표시
-            gameManager.SetPlayerHpUI();
+            gameManager.SetPlayerHp(maxHp, curHp);//게임매니저에 체력 상태를 전달해 UI표시
+            //gameManager.SetPlayerHpUI();
 
             Invoke("returnSituation", 1f);//원래 상태 복귀
 

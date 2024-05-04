@@ -36,7 +36,7 @@ public class PauseMenu : MonoBehaviour
         btnCancel.onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
-            gameManager.checkPauseUI(false);
+            gameManager.CheckPauseUI(false);
             gameObject.SetActive(false);
         });
     }

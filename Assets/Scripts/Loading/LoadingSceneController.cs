@@ -34,6 +34,8 @@ public class LoadingSceneController : MonoBehaviour
         return Instantiate(Resources.Load<LoadingSceneController>("LoadingUI"));
     }
 
+    private GameObject gun;
+
     private void Awake()
     {
         if (Instance != this)
@@ -119,4 +121,5 @@ public class LoadingSceneController : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
 }

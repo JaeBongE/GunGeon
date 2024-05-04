@@ -80,8 +80,15 @@ public class MenuUI : MonoBehaviour
 
     private void pressMainButtons()
     {
+        //게임 시작시 키 다 지우기
         btnStart.onClick.AddListener(() => 
         {
+            if (PlayerPrefs.HasKey("Continue") == true)
+            {
+                //처음부터 다시 할 것인지 물어보기
+            }
+
+            PlayerPrefs.DeleteAll();
             //SceneManager.LoadSceneAsync(1);
             LoadingSceneController.Instance.LoadScene("Stage1");
             Destroy(gameObject);

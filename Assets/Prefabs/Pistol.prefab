@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2348127439971871915}
   - component: {fileID: 2075431526844541538}
-  - component: {fileID: 4461105091759052383}
   - component: {fileID: 6409833421027593663}
+  - component: {fileID: 6116346257593679382}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Player
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 5369356818983846339}
   - {fileID: 4167815153148243837}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2075431526844541538
 SpriteRenderer:
@@ -88,28 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4461105091759052383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1127752917129337967}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 508a3441357e8924786374379edd6c3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objBullet: {fileID: 7135266558617856800, guid: f344bb77b22055743b23111f751a569b, type: 3}
-  bulletSpeed: 15
-  maxBullet: 5
-  curBullet: 0
-  maxTimer: 0.5
-  timer: 0
-  reloadMaxTimer: 1
-  reloadTimer: 0
-  eIcon: {fileID: 4181649179339309717}
-  type: 0
 --- !u!61 &6409833421027593663
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -155,6 +133,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.60204506, y: 0.36919713}
   m_EdgeRadius: 0
+--- !u!114 &6116346257593679382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127752917129337967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcf75a2e6d45ca54cae0e5d6edf2dec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objBullet: {fileID: 7135266558617856800, guid: f344bb77b22055743b23111f751a569b, type: 3}
+  bulletSpeed: 15
+  maxBullet: 5
+  curBullet: 0
+  maxTimer: 0.5
+  timer: 0
+  reloadMaxTimer: 1
+  reloadTimer: 0
+  eIcon: {fileID: 4181649179339309717}
 --- !u!1 &4181649179339309717
 GameObject:
   m_ObjectHideFlags: 0
