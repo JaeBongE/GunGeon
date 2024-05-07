@@ -45,7 +45,7 @@ public class Pistol : Gun
         //총알이 줄어들고, 발사 딜레이를 준다
         curBullet--;
         isShoot = true;
-        
+
 
         gameManager.SetBulletInfor(curBullet, maxBullet);//게임매니저로 총알 정보 전달
 
@@ -70,9 +70,9 @@ public class Pistol : Gun
                 eIcon.SetActive(false);
                 gameManager.SetBulletInfor(curBullet, maxBullet);
                 gameManager.SetGunInfor(gameObject, true);
+                Destroy(gameObject);
             }
 
-            Destroy(gameObject);
         }
     }
 }

@@ -21,6 +21,7 @@ public class MenuUI : MonoBehaviour
     [SerializeField] Button btnContinue;
     [SerializeField] Button btnExit;
     [SerializeField] GameObject oneMore;
+    [SerializeField] GameObject clear;
 
     private void Awake()
     {
@@ -86,12 +87,17 @@ public class MenuUI : MonoBehaviour
             if (PlayerPrefs.HasKey("Continue") == true)
             {
                 //처음부터 다시 할 것인지 물어보기
+                clear.SetActive(true);
+            }
+            else
+            {
+                clear.SetActive(false);
             }
 
-            PlayerPrefs.DeleteAll();
+            //PlayerPrefs.DeleteAll();
             //SceneManager.LoadSceneAsync(1);
-            LoadingSceneController.Instance.LoadScene("Stage1");
-            Destroy(gameObject);
+            //LoadingSceneController.Instance.LoadScene("Stage1");
+            //Destroy(gameObject);
             //LoadingBar.LoadScene("Stage1");
         });
         
@@ -104,7 +110,7 @@ public class MenuUI : MonoBehaviour
             }
             else
             {
-
+                LoadingSceneController.Instance.Continue(true);
                 string loadScene = PlayerPrefs.GetString("Continue");
                 LoadingSceneController.Instance.LoadScene(loadScene);
                 Destroy(gameObject);

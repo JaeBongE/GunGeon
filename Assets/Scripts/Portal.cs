@@ -54,6 +54,7 @@ public class Portal : MonoBehaviour
             Collider2D playerColl = Physics2D.OverlapBox(coll.bounds.center, coll.bounds.size, 0, LayerMask.GetMask("BodyHitBox"));
             if (playerColl != null)
             {
+                GameManager.Instance.SaveInfor();
                 LoadingSceneController.Instance.LoadScene(stage.ToString());
             }
         }

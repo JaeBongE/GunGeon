@@ -20,7 +20,7 @@ public class GameOver : MonoBehaviour
         {
             Time.timeScale = 1f;
             LoadingSceneController.Instance.LoadScene("MainManu");
-            Destroy(gameObject);
+            //Destroy(gameObject);
         });
     }
 
@@ -31,7 +31,7 @@ public class GameOver : MonoBehaviour
             string loadScene = PlayerPrefs.GetString("Continue");
             Time.timeScale = 1f;
             LoadingSceneController.Instance.LoadScene(loadScene);
-            Destroy(gameObject);
+            //Destroy(gameObject);
         });
     }
 }

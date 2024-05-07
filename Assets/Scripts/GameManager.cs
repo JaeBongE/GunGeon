@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     Image hp2;
     Image hp1;
     private float maxHp;
-    private float curHp;
+    [SerializeField] private float curHp;
     private bool isDeath = false;
     Image dashImage;
     private float dashCoolTime;
@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
             curBullet = PlayerPrefs.GetFloat("curBullet");
             maxBullet = PlayerPrefs.GetFloat("maxBullet");
         }
+
+        setPlayerHpUI();
     }
 
     void Update()
@@ -154,7 +156,7 @@ public class GameManager : MonoBehaviour
 
         if (curHp == 2)
         {
-            hp1.gameObject.SetActive(true); 
+            hp1.gameObject.SetActive(true);
             hp2.gameObject.SetActive(true);
             hp3.gameObject.SetActive(false);
         }
@@ -171,8 +173,8 @@ public class GameManager : MonoBehaviour
             hp1.gameObject.SetActive(false);
             hp2.gameObject.SetActive(false);
             hp3.gameObject.SetActive(false);
-            isDeath = true;
-            playerDeath();
+            //isDeath = true;
+            //playerDeath();
         }
 
 
@@ -224,11 +226,11 @@ public class GameManager : MonoBehaviour
     /// <param name="_maxBullet"> 최대 총알의 수</param>
     public void SetBulletInfor(float _curBullet, float _maxBullet)
     {
-        PlayerPrefs.SetFloat("curBullet", _curBullet);
-        PlayerPrefs.SetFloat("maxBullet", _maxBullet);
+        //PlayerPrefs.SetFloat("curBullet", _curBullet);
+        //PlayerPrefs.SetFloat("maxBullet", _maxBullet);
 
-        curBullet = PlayerPrefs.GetFloat("curBullet");
-        maxBullet = PlayerPrefs.GetFloat("maxBullet");
+        curBullet = _curBullet;
+        maxBullet = _maxBullet;
     }
 
     /// <summary>
@@ -245,7 +247,7 @@ public class GameManager : MonoBehaviour
         if (_isGun == true)
         {
             isGunImageOn = true;
-            
+
             GameObject objStage1Manager = GameObject.Find("Stage1Manager");
             if (objStage1Manager == null) return;
             Stage1Manager scStage1 = objStage1Manager.GetComponent<Stage1Manager>();
@@ -320,14 +322,14 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void playerDeath()
+    public void PlayerDeath()
     {
-
-        if (isDeath == true)
-        {
-            Time.timeScale = 0f;
-            gameOverUI.SetActive(true);
-        }
+        Time.timeScale = 0f;
+        gameOverUI.SetActive(true);
+        //if (isDeath == true)
+        //{
+        //    isDeath = false;
+        //}
     }
 
     public void CheckPauseUI(bool _isOpen)
@@ -340,4 +342,10 @@ public class GameManager : MonoBehaviour
         return fabWeapon[(int)_value];
     }
 
+    public void SaveInfor()
+    {
+        PlayerPrefs.SetFloat("CurHP", curHp);
+        PlayerPrefs.SetFloat("curBullet", curBullet);
+        PlayerPrefs.SetFloat("maxBullet", maxBullet);
+    }
 }

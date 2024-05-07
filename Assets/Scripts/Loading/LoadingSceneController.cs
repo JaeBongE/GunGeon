@@ -49,19 +49,29 @@ public class LoadingSceneController : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Image progressBar;
     private string loadSceneName;
+    private bool isContunue = false;
 
     public void LoadScene(string sceneName)
     {
-        
+
         gameObject.SetActive(true);
         SceneManager.sceneLoaded += OnSceneLoaded;
         loadSceneName = sceneName;
-        StartCoroutine(LoadSceneProcess());
-
         if (loadSceneName != "MainManu")
         {
             PlayerPrefs.SetString("Continue", loadSceneName);
+            if (isContunue == false && loadSceneName != "Stage1")
+            {
+                GameManager.Instance.SaveInfor();
+            }
+            else if (isContunue == true)
+            {
+                isContunue = false;
+            }
         }
+        StartCoroutine(LoadSceneProcess());
+
+
     }
 
     private IEnumerator LoadSceneProcess()
@@ -120,6 +130,11 @@ public class LoadingSceneController : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+
+    public void Continue(bool _continue)
+    {
+        isContunue = _continue;
     }
 
 }

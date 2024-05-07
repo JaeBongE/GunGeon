@@ -64,11 +64,13 @@ public class Player : MonoBehaviour
         if (PlayerPrefs.HasKey("CurHP") == true)
         {
             curHp = PlayerPrefs.GetFloat("CurHP");
+            GameManager.Instance.SetPlayerHp(maxHp, curHp);
         }
         else
         {
             curHp = maxHp;
         }
+        
 
         //if (trsLeftHand.GetChild(0).gameObject != null)
         //{
@@ -401,11 +403,12 @@ public class Player : MonoBehaviour
         if (curHp > 0)
         {
             curHp--;
-            PlayerPrefs.SetFloat("CurHP", curHp);
+            //PlayerPrefs.SetFloat("CurHP", curHp);
 
             if (curHp < 1)//피가 0이 되면 
             {
                 anim.SetTrigger("isDeath");//죽는다
+                gameManager.PlayerDeath();
             }
 
             gameObject.layer = LayerMask.NameToLayer("Nodamage");//한대 맞으면 레이어를 바꿔줘서 다단히트로 들어오는 것을 방지 및 빨간색 히트 연출
