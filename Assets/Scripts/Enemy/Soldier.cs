@@ -34,7 +34,7 @@ public class Soldier : Enemy
 
         if (curHp < 1)
         {
-            gameObject.layer = LayerMask.NameToLayer("Nodamage");
+            //gameObject.layer = LayerMask.NameToLayer("Nodamage");
             anim.SetTrigger("Death");
             isDeath = true;
         }

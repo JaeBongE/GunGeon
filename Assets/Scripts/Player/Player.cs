@@ -61,15 +61,15 @@ public class Player : MonoBehaviour
         reLoadUi.SetActive(false);
         //trsGun = gameObject.transform.Find("Pistol");
 
-        if (PlayerPrefs.HasKey("CurHP") == true)
-        {
-            curHp = PlayerPrefs.GetFloat("CurHP");
-            GameManager.Instance.SetPlayerHp(maxHp, curHp);
-        }
-        else
-        {
-            curHp = maxHp;
-        }
+        //if (PlayerPrefs.HasKey("CurHP") == true)
+        //{
+        //    curHp = PlayerPrefs.GetFloat("CurHP");
+        //    GameManager.Instance.SetPlayerHp(maxHp, curHp);
+        //}
+        //else
+        //{
+        //    curHp = maxHp;
+        //}
         
 
         //if (trsLeftHand.GetChild(0).gameObject != null)
@@ -94,6 +94,15 @@ public class Player : MonoBehaviour
     {
         mainCam = Camera.main;
         gameManager = GameManager.Instance;
+        if (PlayerPrefs.HasKey("CurHP") == true)
+        {
+            curHp = PlayerPrefs.GetFloat("CurHP");
+            gameManager.SetPlayerHp(maxHp, curHp);
+        }
+        else
+        {
+            curHp = maxHp;
+        }
         gameManager.SetPlayerHp(maxHp, curHp);
     }
 

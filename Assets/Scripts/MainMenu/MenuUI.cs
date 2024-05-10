@@ -91,7 +91,9 @@ public class MenuUI : MonoBehaviour
             }
             else
             {
+                LoadingSceneController.Instance.LoadScene("Stage1");
                 clear.SetActive(false);
+                Destroy(gameObject);
             }
 
             //PlayerPrefs.DeleteAll();
