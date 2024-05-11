@@ -11,6 +11,7 @@ public class Portal : MonoBehaviour
     {
         Stage1,
         Stage2,
+        Boss,
     }
 
     public toStage stage;
@@ -51,11 +52,27 @@ public class Portal : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Collider2D playerColl = Physics2D.OverlapBox(coll.bounds.center, coll.bounds.size, 0, LayerMask.GetMask("BodyHitBox"));
+            Collider2D playerColl = Physics2D.OverlapBox(coll.bounds.center, coll.bounds.size, 0, LayerMask.GetMask("PlayerHitBox"));
             if (playerColl != null)
             {
                 GameManager.Instance.SaveInfor();
+                GameObject objPlayerUI = GameObject.Find("PlayerUI");
+                PlayerUI scPlayerUI = objPlayerUI.GetComponent<PlayerUI>();
+                scPlayerUI.SaveNodamageInfo();
                 LoadingSceneController.Instance.LoadScene(stage.ToString());
+
+                //if (stage == toStage.Stage2)
+                //{
+                //    GameObject objStage1Manager = GameObject.Find("Stage1Manager");
+                //    Stage1Manager sc = objStage1Manager.GetComponent<Stage1Manager>();
+                //    sc.OpenChoiceUI();
+                //}
+
+
+                //if (GameObject.Find("ChoiceUI") == null)
+                //{
+                //    LoadingSceneController.Instance.LoadScene(stage.ToString());
+                //}
             }
         }
     }

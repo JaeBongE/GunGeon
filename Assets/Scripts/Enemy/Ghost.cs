@@ -21,16 +21,16 @@ public class Ghost : Enemy
         spr = GetComponent<SpriteRenderer>();
     }
 
-    public override void Update()
-    {
-        base.Update();
+    //public override void Update()
+    //{
+    //    base.Update();
 
-        if (curHp < 1)
-        {
-            //gameObject.layer = LayerMask.NameToLayer("Nodamage");
-            anim.SetTrigger("Death");
-        }
-    }
+    //    //if (curHp < 1)
+    //    //{
+    //    //    //gameObject.layer = LayerMask.NameToLayer("Nodamage");
+    //    //    anim.SetTrigger("Death");
+    //    //}
+    //}
 
     public override void move()
     {
@@ -84,7 +84,7 @@ public class Ghost : Enemy
         GameObject obj1 = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity, trsBullets);
         GameObject obj2 = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity, trsBullets);
         GameObject obj3 = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity, trsBullets);
-        
+
         Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
         Rigidbody2D rigid1 = obj1.GetComponent<Rigidbody2D>();
         Rigidbody2D rigid2 = obj2.GetComponent<Rigidbody2D>();
@@ -94,5 +94,14 @@ public class Ghost : Enemy
         rigid1.velocity = Vector3.down * bulletSpeed;
         rigid2.velocity = Vector3.left * bulletSpeed;
         rigid3.velocity = Vector3.right * bulletSpeed;
+    }
+
+    public override void death()
+    {
+        base.death();
+        if (curHp < 1)
+        {
+            anim.SetTrigger("Death");
+        }
     }
 }

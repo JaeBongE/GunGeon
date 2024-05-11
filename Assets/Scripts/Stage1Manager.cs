@@ -13,16 +13,20 @@ public class Stage1Manager : MonoBehaviour
     [SerializeField] GameObject wall2;
     [SerializeField] float maxX;
     [SerializeField] GameObject checkEnemy;
+    [SerializeField] GameObject checkEnemy1;
     [SerializeField] private bool isDeathEnemy = false;
+
+    //[Header("√— º±≈√")]
+    //[SerializeField] GameObject objChoice;
 
     void Update()
     {
         checkGetGun();
         checkDeathEnemy();
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            LoadingSceneController.Instance.LoadScene("Stage2");
-        }
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    LoadingSceneController.Instance.LoadScene("Stage2");
+        //}
     }
 
     private void checkGetGun()
@@ -47,7 +51,7 @@ public class Stage1Manager : MonoBehaviour
 
     private void checkDeathEnemy()
     {
-        if (checkEnemy == null)
+        if (checkEnemy == null && checkEnemy1 == null)
         {
             isDeathEnemy = true;
         }
@@ -79,4 +83,9 @@ public class Stage1Manager : MonoBehaviour
     {
         isGetGun = _isGetGun;
     }
+
+    //public void OpenChoiceUI()
+    //{
+    //    objChoice.SetActive(true);
+    //}
 }

@@ -154,6 +154,13 @@ public class GameManager : MonoBehaviour
     {
         if (gunUi == null) return;
 
+        if (curHp == 3)
+        {
+            hp1.gameObject.SetActive(true);
+            hp2.gameObject.SetActive(true);
+            hp3.gameObject.SetActive(true);
+        }
+
         if (curHp == 2)
         {
             hp1.gameObject.SetActive(true);

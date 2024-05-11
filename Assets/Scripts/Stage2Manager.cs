@@ -5,17 +5,123 @@ using UnityEngine.UI;
 
 public class Stage2Manager : MonoBehaviour
 {
+    public static Stage2Manager Instance;
+
     GameObject player;
     [SerializeField] Image gunUI;
+
+    [Header("터미널 눌렀을 때")]
+    [SerializeField] GameObject wall;
+    [SerializeField] private float maxY;
+    private bool isTerminal = false;
+    [SerializeField] GameObject choiceUI;
+
+    [Header("적이 처치 되었을 때")]
+    [SerializeField] GameObject wall2;
+    [SerializeField] private float maxX;
+    [SerializeField] GameObject checkEnemy;
+    [SerializeField] GameObject checkEnemy1;
+    private bool isDeathEnemy = false;
+
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     private void Start()
     {
         player = GameObject.Find("Player");
         Player scPlayer = player.GetComponent<Player>();
+        //if (PlayerPrefs.GetString("Gun") == "Pistol")
+        //{
+        //    scPlayer.GetGun(Player.typeGun.Pistol);
+        //}
+        //else if (PlayerPrefs.GetString("Gun") == "Rifle")
+        //{
+        //    scPlayer.GetGun(Player.typeGun.Rifle);
+        //}
+
         scPlayer.GetGun(Player.typeGun.Pistol);
+
 
         GameObject objGun = GameObject.Find("LeftHand").transform.GetChild(0).gameObject;
         SpriteRenderer sprGun = objGun.GetComponent<SpriteRenderer>();
         gunUI.sprite = sprGun.sprite;
         gunUI.gameObject.SetActive(true);
+    }
+
+    private void Update()
+    {
+        moveWall();
+
+        checkDeathEnemy();
+    }
+
+    private void moveWall()
+    {
+        if (isTerminal == true)
+        {
+            float wallY = wall.transform.position.y;
+
+            if (wallY > maxY)
+            {
+                wallY = maxY;
+                //Destroy(wall);
+            }
+
+            //벽이 위로 이동하면서 문이 열린다
+            wallY += Time.deltaTime;
+            wall.transform.position = new Vector3(wall.transform.position.x, wallY, wall.transform.position.z);
+        }
+    }
+
+    public void CheckTerminal(bool _terminal)
+    {
+        isTerminal = _terminal;
+    }
+
+    private void checkDeathEnemy()
+    {
+        if (checkEnemy == null && checkEnemy1 == null)
+        {
+            isDeathEnemy = true;
+        }
+
+        if (isDeathEnemy == true)
+        {
+            if (wall2 == null) return;
+
+            float wallX = wall2.transform.position.x;
+
+            if (wallX > maxX)
+            {
+                wallX = maxX;
+                //Destroy(wall);
+            }
+
+            //벽이 위로 이동하면서 문이 열린다
+            wallX += Time.deltaTime;
+            wall2.transform.position = new Vector3(wallX, wall2.transform.position.y, wall2.transform.position.z);
+        }
+    }
+
+    public void ChangeGun()
+    {
+        player = GameObject.Find("Player");
+        Player scPlayer = player.GetComponent<Player>();
+        scPlayer.GetGun(Player.typeGun.Rifle);
+    }
+
+    public void OpenChoiceUI()
+    {
+        //터미널에서 F눌렀을 때 총 선택하는 UI 나오게 하기
     }
 }

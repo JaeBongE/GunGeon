@@ -55,6 +55,7 @@ public class Enemy : MonoBehaviour
     /// <param name="_damage">받은 데미지</param>
     public virtual void GetDamage(float _damage)
     {
+        CheckPlayer();
         curHp -= _damage;
     }
 
@@ -62,15 +63,16 @@ public class Enemy : MonoBehaviour
     {
         move();
         moveCoolTime();
+        death();
 
-        if (curHp < 1)//체력이 0이되면 게임매니저 배열삭제 알림
-        {
-            gameObject.layer = LayerMask.NameToLayer("Nodamage");
-            hitBox.layer = LayerMask.NameToLayer("Nodamage");
-            moveSpeed = 0f;
-            gameManager.CheckoutEnemy(gameObject);
-            Destroy(gameObject, 1f);
-        }
+        //if (curHp < 1)//체력이 0이되면 게임매니저 배열삭제 알림
+        //{
+        //    gameObject.layer = LayerMask.NameToLayer("Nodamage");
+        //    hitBox.layer = LayerMask.NameToLayer("Nodamage");
+        //    moveSpeed = 0f;
+        //    gameManager.CheckoutEnemy(gameObject);
+        //    Destroy(gameObject, 1.5f);
+        //}
     }
 
     /// <summary>
@@ -135,5 +137,17 @@ public class Enemy : MonoBehaviour
     {
         isCheckPlayer = true;
         isMove = true;
+    }
+
+    public virtual void death()
+    {
+        if (curHp < 1)//체력이 0이되면 게임매니저 배열삭제 알림
+        {
+            gameObject.layer = LayerMask.NameToLayer("Nodamage");
+            hitBox.layer = LayerMask.NameToLayer("Nodamage");
+            moveSpeed = 0f;
+            gameManager.CheckoutEnemy(gameObject);
+            Destroy(gameObject, 1.5f);
+        }
     }
 }

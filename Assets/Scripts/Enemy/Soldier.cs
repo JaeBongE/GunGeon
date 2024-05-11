@@ -32,12 +32,12 @@ public class Soldier : Enemy
         shoot();
         shootCoolTime();
 
-        if (curHp < 1)
-        {
-            //gameObject.layer = LayerMask.NameToLayer("Nodamage");
-            anim.SetTrigger("Death");
-            isDeath = true;
-        }
+        //if (curHp < 1)
+        //{
+        //    //gameObject.layer = LayerMask.NameToLayer("Nodamage");
+        //    anim.SetTrigger("Death");
+        //    isDeath = true;
+        //}
     }
 
     /// <summary>
@@ -146,5 +146,16 @@ public class Soldier : Enemy
                 isShoot = false;
             }
         }
+    }
+
+    public override void death()
+    {
+        base.death();
+        if (curHp < 1)
+        {
+            anim.SetTrigger("Death");
+            isDeath = true;
+        }
+        
     }
 }

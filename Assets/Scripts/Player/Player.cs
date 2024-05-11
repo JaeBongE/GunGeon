@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private Vector3 moveDir;
     [SerializeField] private float maxHp = 3;
     [SerializeField] private float curHp = 0;
+    [SerializeField] private bool isNodamage = false;
 
 
     [Header("ÃÑ°ü·Ã")]
@@ -409,6 +410,8 @@ public class Player : MonoBehaviour
     /// </summary>
     public void GetDamage()
     {
+        if (isNodamage == true) return;
+
         if (curHp > 0)
         {
             curHp--;
@@ -432,4 +435,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void CheckNodamage(bool _isNodamage)
+    {
+        isNodamage = _isNodamage;
+    }
+
+    public void Heal()
+    {
+        curHp = maxHp;
+        gameManager.SetPlayerHp(maxHp, curHp);
+    }
 }
