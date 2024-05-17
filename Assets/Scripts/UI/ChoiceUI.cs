@@ -23,6 +23,10 @@ public class ChoiceUI : MonoBehaviour
 
         btnRifle.onClick.AddListener(() =>
         {
+            GameObject player = GameObject.Find("Player");
+            Player scPlayer = player.GetComponent<Player>();
+            scPlayer.ChangeGun(true);
+
             Stage2Manager sc = stage2Manager.GetComponent<Stage2Manager>();
             sc.ChangeGun();
             Destroy(gameObject);

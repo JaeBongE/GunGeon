@@ -782,6 +782,7 @@ MonoBehaviour:
   maxX: 21.24
   checkEnemy: {fileID: 607581504}
   checkEnemy1: {fileID: 138707762}
+  objRifle: {fileID: 7266452870560630321, guid: 8bb6b54ae7c423d48a62ee28d37e0031, type: 3}
 --- !u!1 &292934221
 GameObject:
   m_ObjectHideFlags: 0

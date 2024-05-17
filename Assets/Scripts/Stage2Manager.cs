@@ -23,6 +23,8 @@ public class Stage2Manager : MonoBehaviour
     [SerializeField] GameObject checkEnemy1;
     private bool isDeathEnemy = false;
 
+    [SerializeField] GameObject objRifle;
+
 
     private void Awake()
     {
@@ -117,11 +119,13 @@ public class Stage2Manager : MonoBehaviour
     {
         player = GameObject.Find("Player");
         Player scPlayer = player.GetComponent<Player>();
-        scPlayer.GetGun(Player.typeGun.Rifle);
+        scPlayer.ChangeGun(Player.typeGun.Rifle);
+        //Rifle scRifle = objRifle.GetComponent<Rifle>();
+        //scRifle.ChangeGun();
     }
 
     public void OpenChoiceUI()
     {
-        //터미널에서 F눌렀을 때 총 선택하는 UI 나오게 하기
+        choiceUI.SetActive(true);
     }
 }

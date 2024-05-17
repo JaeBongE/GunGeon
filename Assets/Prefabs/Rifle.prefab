@@ -125,8 +125,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8526297135400275189}
   - component: {fileID: 3730156970486118711}
-  - component: {fileID: 8773067305050840346}
   - component: {fileID: 208777534957851659}
+  - component: {fileID: -6010304600650039375}
   m_Layer: 0
   m_Name: Rifle
   m_TagString: Gun
@@ -142,7 +142,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7266452870560630321}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9162683, y: 0.30688673, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -203,28 +203,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8773067305050840346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7266452870560630321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 508a3441357e8924786374379edd6c3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objBullet: {fileID: 7135266558617856800, guid: f344bb77b22055743b23111f751a569b, type: 3}
-  bulletSpeed: 20
-  maxBullet: 30
-  curBullet: 0
-  maxTimer: 0.1
-  timer: 0
-  reloadMaxTimer: 1
-  reloadTimer: 0
-  eIcon: {fileID: 1927883043726354401}
-  type: 1
 --- !u!61 &208777534957851659
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -260,7 +238,7 @@ BoxCollider2D:
   m_Offset: {x: 0.10679126, y: 0.050058395}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.3863049, y: 0.4965545}
+    pivot: {x: 0.305686, y: 0.46236178}
     oldSize: {x: 1.0526316, y: 0.5263158}
     newSize: {x: 1.0526316, y: 0.5263158}
     adaptiveTilingThreshold: 0.5
@@ -270,3 +248,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0259342, y: 0.3728034}
   m_EdgeRadius: 0
+--- !u!114 &-6010304600650039375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266452870560630321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd27f00e20390844ab7b4baf828d9961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objBullet: {fileID: 7135266558617856800, guid: f344bb77b22055743b23111f751a569b, type: 3}
+  bulletSpeed: 15
+  maxBullet: 30
+  curBullet: 0
+  maxTimer: 0.2
+  timer: 0
+  reloadMaxTimer: 1
+  reloadTimer: 0
+  eIcon: {fileID: 0}

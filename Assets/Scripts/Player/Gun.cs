@@ -11,9 +11,9 @@ public class Gun : MonoBehaviour
     protected Collider2D coll;
     protected Rigidbody2D rigid;
     [SerializeField] protected GameObject objBullet;
-    [SerializeField] protected float bulletSpeed = 20f;
+    [SerializeField] protected float bulletSpeed;
     protected Transform trsMuzzle;
-    [SerializeField] protected float maxBullet = 5f;
+    [SerializeField] protected float maxBullet;
     [SerializeField] protected float curBullet = 0f;
     [SerializeField] protected float maxTimer = 2f;
     [SerializeField] protected float timer = 0f;
@@ -23,6 +23,7 @@ public class Gun : MonoBehaviour
     protected bool isReload = false;
     protected GameObject reLoadUi;
     [SerializeField] protected GameObject eIcon;
+    protected bool isChangeGun = false;
 
 
 

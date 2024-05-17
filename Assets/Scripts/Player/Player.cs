@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     private GameObject objGun;
     private Transform trsGun;
     private SpriteRenderer sprGun;
+    private bool isChange = false;
 
 
     [Header("UI")]
@@ -242,6 +243,7 @@ public class Player : MonoBehaviour
     {
         if (trsGun == null) return;
 
+
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = -mainCam.transform.position.z;
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(mousePos);
@@ -347,12 +349,26 @@ public class Player : MonoBehaviour
         objGun = Instantiate(gameManager.GetWeapon(_value));
         objGun.transform.SetParent(trsLeftHand);
         objGun.transform.localPosition = Vector3.zero;
+        //objGun.transform.localPosition = trsLeftHand.localEulerAngles;
 
         trsGun = objGun.transform;
         sprGun = trsGun.GetComponent<SpriteRenderer>();
 
         isPistol = true;
         
+    }
+
+    public void ChangeGun(typeGun _value)
+    {
+        Destroy(objGun);
+
+        objGun = Instantiate(gameManager.GetWeapon(_value));
+        objGun.transform.SetParent(trsLeftHand);
+        objGun.transform.localPosition = Vector3.zero;
+        objGun.transform.localEulerAngles = Vector3.zero;
+
+        trsGun = objGun.transform;
+        sprGun = trsGun.GetComponent<SpriteRenderer>();
     }
 
     /// <summary>
@@ -444,5 +460,10 @@ public class Player : MonoBehaviour
     {
         curHp = maxHp;
         gameManager.SetPlayerHp(maxHp, curHp);
+    }
+
+    public void ChangeGun(bool _isChange)
+    {
+        isChange = _isChange;
     }
 }

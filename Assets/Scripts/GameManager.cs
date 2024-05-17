@@ -238,6 +238,7 @@ public class GameManager : MonoBehaviour
 
         curBullet = _curBullet;
         maxBullet = _maxBullet;
+        gunBulletUi.text = ($"{curBullet} / {maxBullet}");
     }
 
     /// <summary>
