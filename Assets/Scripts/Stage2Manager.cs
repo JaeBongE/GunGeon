@@ -120,6 +120,8 @@ public class Stage2Manager : MonoBehaviour
         player = GameObject.Find("Player");
         Player scPlayer = player.GetComponent<Player>();
         scPlayer.ChangeGun(Player.typeGun.Rifle);
+
+        PlayerPrefs.SetString("Rifle", "Get");
         //Rifle scRifle = objRifle.GetComponent<Rifle>();
         //scRifle.ChangeGun();
     }

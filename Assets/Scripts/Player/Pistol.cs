@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Pistol : Gun
 {
+    private bool isGun = false;
     public override void Awake()
     {
         base.Awake();
@@ -58,6 +59,7 @@ public class Pistol : Gun
 
     private void getGun()
     {
+        if (isGun == true) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -74,5 +76,10 @@ public class Pistol : Gun
             }
 
         }
+    }
+
+    public void HaveGun(bool _isGun)
+    {
+        isGun = _isGun;
     }
 }

@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 3714128588768189748}
   - component: {fileID: 8420893640705003903}
   - component: {fileID: 8572555380425213150}
+  - component: {fileID: 8589252392808590132}
   m_Layer: 8
   m_Name: Soldier
   m_TagString: Enemy
@@ -344,9 +345,37 @@ MonoBehaviour:
   minY: 0.47
   moveSpeed: 2
   isCheckPlayer: 0
+  InvTime: 0.5
   trsMuzzle: {fileID: 7157334734280232518}
   enemyBullet: {fileID: 5142194776378426475, guid: 4e260691d1a0d41458809252e58a8680, type: 3}
   bulletSpeed: 10
+--- !u!50 &8589252392808590132
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982410628006702315}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &8358035030679447260
 GameObject:
   m_ObjectHideFlags: 0

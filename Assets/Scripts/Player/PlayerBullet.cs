@@ -15,8 +15,14 @@ public class PlayerBullet : MonoBehaviour
             {
                 
             }
-            scEnemy.GetDamage(damage);
-            Destroy(gameObject);
+            if (scEnemy.GetDamage(damage) == true)
+            { 
+                Destroy(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         
         if (collision.gameObject.tag == GameTag.Wall.ToString())

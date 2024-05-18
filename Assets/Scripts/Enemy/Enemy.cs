@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,6 +13,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float curHp;
     protected Animator anim;
     [SerializeField] protected GameObject hitBox;
+    protected bool isDeath = false;
 
     [Header("적의 이동범위")]
     [SerializeField] protected float maxX;
@@ -26,6 +26,13 @@ public class Enemy : MonoBehaviour
     protected float moveMaxCool = 2f;
     protected float moveCool = 0f;
     [SerializeField] protected bool isCheckPlayer = false;
+
+    protected SpriteRenderer spr;
+
+    float invTimer = 0.0f;//공격을 받았는지, 1초후에 다시 공격을 받을수 있는 상태로 변경됨
+    [SerializeField]
+    protected float InvTime = 1.0f;
+
 
     public virtual void Awake()
     {
@@ -40,10 +47,11 @@ public class Enemy : MonoBehaviour
 
         curHp = maxHp;
         anim = GetComponent<Animator>();
+        spr = GetComponent<SpriteRenderer>();
         isMove = true;
     }
 
-    private void Start()
+    public virtual void Start()
     {
         targetPos = getRandomPos();
         gameManager = GameManager.Instance;
@@ -53,17 +61,53 @@ public class Enemy : MonoBehaviour
     /// 데미지를 받았을 때 체력이 깎인다
     /// </summary>
     /// <param name="_damage">받은 데미지</param>
-    public virtual void GetDamage(float _damage)
+    public virtual bool GetDamage(float _damage)
     {
+        if (invTimer != 0.0f) return false;
+        invTimer = InvTime;
+
         CheckPlayer();
         curHp -= _damage;
+
+        if (curHp > 0)
+        {
+            hitAnim();
+        }
+        else
+        {
+            death();
+        }
+        return true;
+        //if (curHp < 1)
+        //{
+        //    gameObject.layer = LayerMask.NameToLayer("Nodamage");
+        //    hitBox.layer = LayerMask.NameToLayer("Nodamage");
+        //    moveSpeed = 0f;
+        //    gameManager.CheckoutEnemy(gameObject);
+        //    Destroy(gameObject, 1.5f);
+        //}
+    }
+
+    protected virtual void hitAnim()
+    {
+        anim.SetTrigger("Hit");
+        spr.color = Color.red;
+        Invoke("returnColor", InvTime);
+    }
+
+    protected void returnColor()
+    {
+        spr.color = Color.white;
+        hitBox.layer = LayerMask.NameToLayer("EnemyHitBox");
     }
 
     public virtual void Update()
     {
+        checkTimers();
+
         move();
         moveCoolTime();
-        death();
+        //death();
 
         //if (curHp < 1)//체력이 0이되면 게임매니저 배열삭제 알림
         //{
@@ -75,12 +119,24 @@ public class Enemy : MonoBehaviour
         //}
     }
 
+    private void checkTimers()
+    {
+        if (invTimer != 0.0f)
+        {
+            invTimer -= Time.deltaTime;
+            if (invTimer < 0.0f)
+            {
+                invTimer = 0.0f;
+            }
+        }
+    }
+
     /// <summary>
     /// 랜덤한 위치로 이동하다가 Player를 발견하면 플레이어를 따라가도록 설계
     /// </summary>
     public virtual void move()
     {
-        if (isMove == false) return;//움직였다가 한 번 쉬는 딜레이를 만듬
+        if (isMove == false || isDeath == true) return;//움직였다가 한 번 쉬는 딜레이를 만듬
 
         if (isCheckPlayer == false)//Player 인식 전
         {
@@ -141,13 +197,18 @@ public class Enemy : MonoBehaviour
 
     public virtual void death()
     {
-        if (curHp < 1)//체력이 0이되면 게임매니저 배열삭제 알림
-        {
-            gameObject.layer = LayerMask.NameToLayer("Nodamage");
-            hitBox.layer = LayerMask.NameToLayer("Nodamage");
-            moveSpeed = 0f;
-            gameManager.CheckoutEnemy(gameObject);
-            Destroy(gameObject, 1.5f);
-        }
+        isDeath = true;
+        isMove = false;
+        gameObject.layer = LayerMask.NameToLayer("Nodamage");
+        hitBox.layer = LayerMask.NameToLayer("Nodamage");
+        moveSpeed = 0f;
+        gameManager.CheckoutEnemy(gameObject);
+        anim.SetTrigger("Death");
+
+    }
+
+    public void doDestroy()
+    {
+        Destroy(gameObject);
     }
 }

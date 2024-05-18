@@ -30,7 +30,7 @@ public class GameOver : MonoBehaviour
         {
             string loadScene = PlayerPrefs.GetString("Continue");
             Time.timeScale = 1f;
-            LoadingSceneController.Instance.LoadScene(loadScene);
+            LoadingSceneController.Instance.ContinueScene(loadScene);
             //Destroy(gameObject);
         });
     }

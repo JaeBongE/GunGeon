@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Soldier : Enemy
 {
-    SpriteRenderer spr;
-
     private float shootTimer = 2;
     private float shootTime = 2;
     private bool isShoot = false;
@@ -16,12 +14,10 @@ public class Soldier : Enemy
     [SerializeField] Transform trsMuzzle;
     [SerializeField] GameObject enemyBullet;
     [SerializeField] private float bulletSpeed = 5f;
-    private bool isDeath = false;
 
     public override void Awake()
     {
         base.Awake();
-        spr =  GetComponent<SpriteRenderer>();
         isShoot = true;
     }
 
@@ -70,21 +66,26 @@ public class Soldier : Enemy
     /// 데미지를 받았을 때 솔져 애니메이션 작동
     /// </summary>
     /// <param name="_damage"></param>
-    public override void GetDamage(float _damage)
-    {
-        base.GetDamage(_damage);
+    //public override void GetDamage(float _damage)
+    //{
+    //    base.GetDamage(_damage);
 
-        hitBox.layer = LayerMask.NameToLayer("Nodamage");
-        anim.SetTrigger("Hit");
-        spr.color = Color.red;
-        Invoke("returnColor", 0.7f);
-    }
 
-    private void returnColor()
-    {
-        spr.color = Color.white;
-        hitBox.layer = LayerMask.NameToLayer("EnemyHitBox");
-    }
+    //    Invoke("returnColor", 1f);
+
+    //    //base.GetDamage(_damage);
+
+    //    //hitBox.layer = LayerMask.NameToLayer("Nodamage");
+    //    //anim.SetTrigger("Hit");
+    //    //spr.color = Color.red;
+    //    //Invoke("returnColor", 1f);
+    //}
+
+    //private void returnColor()
+    //{
+    //    spr.color = Color.white;
+    //    hitBox.layer = LayerMask.NameToLayer("EnemyHitBox");
+    //}
 
     /// <summary>
     /// 솔져가 Player를 체크했을 때 총알을 발사하는 함수
@@ -146,16 +147,5 @@ public class Soldier : Enemy
                 isShoot = false;
             }
         }
-    }
-
-    public override void death()
-    {
-        base.death();
-        if (curHp < 1)
-        {
-            anim.SetTrigger("Death");
-            isDeath = true;
-        }
-        
     }
 }

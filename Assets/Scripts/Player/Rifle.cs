@@ -16,10 +16,18 @@ public class Rifle : Gun
     {
         base.Start();
         player.ChangeGun(false);
-        maxBullet = 30f;
-        curBullet = maxBullet;
-        gameManager.SetBulletInfor(curBullet, maxBullet);
-        gameManager.SetGunInfor(gameObject, false);
+        if (PlayerPrefs.GetFloat("maxBullet") == 30f)
+        {
+            curBullet = PlayerPrefs.GetFloat("curBullet");
+            maxBullet = PlayerPrefs.GetFloat("maxBullet");
+        }
+        else
+        {
+            maxBullet = 30f;
+            curBullet = maxBullet;
+            gameManager.SetBulletInfor(curBullet, maxBullet);
+            gameManager.SetGunInfor(gameObject, false);
+        }
     }
 
     public override void Update()

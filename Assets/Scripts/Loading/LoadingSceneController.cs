@@ -70,8 +70,14 @@ public class LoadingSceneController : MonoBehaviour
             }
         }
         StartCoroutine(LoadSceneProcess());
+    }
 
-
+    public void ContinueScene(string sceneName)
+    {
+        gameObject.SetActive(true);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        loadSceneName = sceneName;
+        StartCoroutine(LoadSceneProcess());
     }
 
     private IEnumerator LoadSceneProcess()

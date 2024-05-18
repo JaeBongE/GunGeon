@@ -118,8 +118,7 @@ public class Player : MonoBehaviour
         checkMousePoint();
         //checkShoot();
         shoot();
-
-
+        checkGun();
     }
 
     /// <summary>
@@ -355,7 +354,18 @@ public class Player : MonoBehaviour
         sprGun = trsGun.GetComponent<SpriteRenderer>();
 
         isPistol = true;
-        
+    }
+
+    private void checkGun()
+    {
+        if (objGun != null)
+        {
+            if (objGun.name == "Pistol(Clone)")
+            {
+                Pistol scPistol = objGun.GetComponent<Pistol>();
+                scPistol.HaveGun(true);
+            }
+        }
     }
 
     public void ChangeGun(typeGun _value)
