@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Rifle : Gun
 {
-    
+
 
     public override void Awake()
     {
         base.Awake();
-        
+
     }
 
     public override void Start()
@@ -20,6 +20,7 @@ public class Rifle : Gun
         {
             curBullet = PlayerPrefs.GetFloat("curBullet");
             maxBullet = PlayerPrefs.GetFloat("maxBullet");
+            gameManager.SetGunInfor(gameObject, false);
         }
         else
         {

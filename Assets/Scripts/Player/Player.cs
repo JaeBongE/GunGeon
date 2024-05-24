@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
         //}
     }
 
-    void Start()
+    private void Start()
     {
         mainCam = Camera.main;
         gameManager = GameManager.Instance;
@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
         gameManager.SetPlayerHp(maxHp, curHp);
     }
 
-    void Update()
+    private void Update()
     {
         checkDashTime();
 
@@ -354,6 +354,7 @@ public class Player : MonoBehaviour
         sprGun = trsGun.GetComponent<SpriteRenderer>();
 
         isPistol = true;
+
     }
 
     private void checkGun()
@@ -379,6 +380,13 @@ public class Player : MonoBehaviour
 
         trsGun = objGun.transform;
         sprGun = trsGun.GetComponent<SpriteRenderer>();
+
+        //GameObject objManager = GameObject.Find("GameManager");
+        //GameManager scManager = objManager.GetComponent<GameManager>();
+        //scManager.SetGunInfor(objGun, false);
+
+        //gameManager.SetGunInfor(objGun, false);
+
     }
 
     /// <summary>
