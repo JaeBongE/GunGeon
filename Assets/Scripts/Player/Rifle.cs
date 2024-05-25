@@ -20,14 +20,14 @@ public class Rifle : Gun
         {
             curBullet = PlayerPrefs.GetFloat("curBullet");
             maxBullet = PlayerPrefs.GetFloat("maxBullet");
-            gameManager.SetGunInfor(gameObject, false);
+            //gameManager.SetGunInfor(gameObject, false);
         }
         else
         {
             maxBullet = 30f;
             curBullet = maxBullet;
             gameManager.SetBulletInfor(curBullet, maxBullet);
-            gameManager.SetGunInfor(gameObject, false);
+            //gameManager.SetGunInfor(gameObject, false);
         }
     }
 

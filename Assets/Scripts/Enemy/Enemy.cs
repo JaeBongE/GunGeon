@@ -90,6 +90,8 @@ public class Enemy : MonoBehaviour
 
     protected virtual void hitAnim()
     {
+        if (gameObject.name == "Boss") return;
+
         anim.SetTrigger("Hit");
         spr.color = Color.red;
         Invoke("returnColor", InvTime);

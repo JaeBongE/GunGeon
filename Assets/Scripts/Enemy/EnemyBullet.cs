@@ -30,6 +30,6 @@ public class EnemyBullet : MonoBehaviour
 
     private void Awake()
     {
-        Destroy(gameObject, 3f);
+        //Destroy(gameObject, 3f);
     }
 }

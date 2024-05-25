@@ -12,12 +12,20 @@ public class BossCutScene : MonoBehaviour
     [SerializeField] GameObject S1;
     List<GameObject> listText = new List<GameObject>();
 
+    [SerializeField] GameObject UI;
+
     CanvasGroup canvas;
 
     private bool isOpen = false;
     private bool isEnd = false;
     [SerializeField] private float timer = 3;
     private float maxTimer = 0;
+
+    private float textTimer = 1f;
+    private float textMaxTimer = 0f;
+    private bool isShowText = false;
+    private int textCount = 1;
+
 
     private void Awake()
     {
@@ -77,16 +85,16 @@ public class BossCutScene : MonoBehaviour
             if (canvas.alpha < 0f)
             {
                 canvas.alpha = 0f;
+                
                 //gameObject.SetActive(false);
             }
+
+            BossUI scBossUI = UI.GetComponent<BossUI>();
+            scBossUI.CheckCutScene();
         }
 
     }
 
-    private float textTimer = 1f;
-    private float textMaxTimer = 0f;
-    private bool isShowText = false;
-    private int textCount = 1;
 
     private void showText()
     {
