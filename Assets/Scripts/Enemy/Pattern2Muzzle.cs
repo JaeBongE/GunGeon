@@ -19,7 +19,7 @@ public class Pattern2Muzzle : MonoBehaviour
     {
         if (doExplosion)
         {
-            spr.color = new Color(0, 0, 0, 0);
+            spr.color = new Color(255, 0, 0, 0);
             doExplosion = false;
         }
 

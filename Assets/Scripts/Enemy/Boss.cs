@@ -27,14 +27,19 @@ public class Boss : Enemy
     private float stopLimitTimer = 2f;
     private bool isStop = false;
 
+    Transform trsBullet;
+
     [Header("패턴1")]
     [SerializeField] GameObject enemyBullet;
     [SerializeField] List<Transform> listPattern1 = new List<Transform>();
-    private float bulletSpeed = 5f;
+    private float bulletSpeed = 10f;
 
     [Header("패턴2")]
     [SerializeField] GameObject objPattern2;
 
+    [Header("패턴3")]
+    [SerializeField] Transform trsMuzzle;
+    WaitForSeconds coolTimePattern3 = new WaitForSeconds(0.4f);
 
     public enum BossPattern
     {
@@ -43,15 +48,20 @@ public class Boss : Enemy
         P3,
     }
 
+
     public override void Start()
     {
         base.Start();
 
+        GameObject bullets = GameObject.Find("Bullets");
+        trsBullet = bullets.transform;
     }
 
     public override void Update()
     {
         base.Update();
+
+        checkAnim();
 
         checkStopTime();
 
@@ -59,20 +69,75 @@ public class Boss : Enemy
         coolPattern1();
         coolPattern2();
         coolPattern3();
+
     }
+
+    private void checkAnim()
+    {
+        if (isMove == false || isStop == true)
+        {
+            anim.SetBool("isStop", true);
+        }
+        else if (isMove == true || isStop == false)
+        {
+            anim.SetBool("isStop", false);
+        }
+    }
+
 
     public override bool GetDamage(float _damage)
     {
+        bool value = base.GetDamage(_damage);
+
         BossUI scUI = UI.GetComponent<BossUI>();
         scUI.SetBossHp(curHp, maxHp);
-        return base.GetDamage(_damage);
+
+        if (curHp == maxHp / 2)
+        {
+            moveSpeed += 3f;
+        }
+
+        if (curHp < 1)
+        {
+            UI.SetActive(false);
+        }
+
+        return value;
     }
+
+    //public void checkBossHp()
+    //{
+    //    BossUI scUI = UI.GetComponent<BossUI>();
+    //    scUI.SetBossHp(curHp, maxHp);
+
+    //    if (curHp == maxHp / 2)
+    //    {
+    //        moveSpeed += 3f;
+    //    }
+
+    //    if (curHp < 1)
+    //    {
+    //        UI.SetActive(false);
+    //    }
+    //}
 
     public override void move()
     {
-        if (isStop) return;
+        if (isStop || isDeath) return;
 
+        Vector3 Pos = gameObject.transform.position;
+        Vector3 scale = gameObject.transform.localScale;
         base.move();
+
+        if (Pos.x > targetPos.x)
+        {
+            scale.x = 1f;
+        }
+        else
+        {
+            scale.x = -1f;
+        }
+        gameObject.transform.localScale = scale;
     }
 
     private void coolPattern1()
@@ -87,7 +152,7 @@ public class Boss : Enemy
             }
         }
     }
-    
+
     private void coolPattern2()
     {
         if (pattern2ChangeTimer > 0f)
@@ -100,7 +165,7 @@ public class Boss : Enemy
             }
         }
     }
-    
+
     private void coolPattern3()
     {
         if (pattern3ChangeTimer > 0f)
@@ -117,6 +182,8 @@ public class Boss : Enemy
 
     private void checkBossParrtern()
     {
+        if (isDeath == true) return;
+
         if (isCheckPlayer)
         {
             int beforePattern = curPattern;
@@ -130,11 +197,15 @@ public class Boss : Enemy
             {
                 patternTimer = 0f;
             }
+            else
+            {
+                return;
+            }
 
             switch ((BossPattern)curPattern)
             {
                 case BossPattern.P1:
-                    if (patternTimer == 0f && isCoolParrtern1 == false)
+                    if (isCoolParrtern1 == false)
                     {
                         pattern1();
                         patternTimer = patternLimitTime;
@@ -144,7 +215,7 @@ public class Boss : Enemy
                     break;
 
                 case BossPattern.P2:
-                    if (patternTimer == 0f && isCoolParrtern2 == false)
+                    if (isCoolParrtern2 == false)
                     {
                         pattern2();
                         patternTimer = patternLimitTime;
@@ -154,7 +225,7 @@ public class Boss : Enemy
                     break;
 
                 case BossPattern.P3:
-                    if (patternTimer == 0f && isCoolParrtern3 == false)
+                    if (isCoolParrtern3 == false)
                     {
                         pattern3();
                         patternTimer = patternLimitTime;
@@ -182,19 +253,16 @@ public class Boss : Enemy
     private void pattern1()
     {
         isStop = true;
+        anim.SetTrigger("pattern1");
 
         Debug.Log("패턴1");
 
-        GameObject bullets = GameObject.Find("Bullets");
-        Transform trsBullets = bullets.transform;
-
-
         for (int iNum = 0; iNum < listPattern1.Count; iNum++)
         {
-            GameObject obj = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullets);
-            GameObject obj1 = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullets);
-            GameObject obj2 = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullets);
-            GameObject obj3 = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullets);
+            GameObject obj = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullet);
+            GameObject obj1 = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullet);
+            GameObject obj2 = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullet);
+            GameObject obj3 = Instantiate(enemyBullet, listPattern1[iNum].position, Quaternion.identity, trsBullet);
 
             Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid1 = obj1.GetComponent<Rigidbody2D>();
@@ -207,12 +275,12 @@ public class Boss : Enemy
             rigid3.velocity = Vector3.right * bulletSpeed;
         }
 
-        
     }
 
     private void pattern2()
     {
         isStop = true;
+        anim.SetTrigger("pattern2");
 
         Debug.Log("패턴2");
         Pattern2 scPattern2 = objPattern2.GetComponent<Pattern2>();
@@ -224,5 +292,23 @@ public class Boss : Enemy
         isStop = true;
 
         Debug.Log("패턴3");
+
+        StartCoroutine(shootPattern3(trsBullet));
     }
+
+    IEnumerator shootPattern3(Transform _trsBullets)
+    {
+        int count = 10;
+        for (int iNum = 0; iNum < count; ++iNum)
+        {
+            GameObject obj = Instantiate(enemyBullet, trsMuzzle.position, Quaternion.identity, _trsBullets);
+            Rigidbody2D rigid = obj.GetComponent<Rigidbody2D>();
+
+            Vector3 shootDir = (trsPlayer.position - trsMuzzle.position).normalized;
+            rigid.velocity = shootDir * bulletSpeed;
+
+            yield return coolTimePattern3;
+        }
+    }
+
 }

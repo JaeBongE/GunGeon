@@ -56,7 +56,6 @@ public class Pattern2 : MonoBehaviour
 
                     for (int jNum = 0; jNum < listExplosion.Count; jNum ++)
                     {
-
                         listExplosion[jNum].SetActive(true);
                     }
 

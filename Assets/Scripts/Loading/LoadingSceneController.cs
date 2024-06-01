@@ -57,7 +57,7 @@ public class LoadingSceneController : MonoBehaviour
         gameObject.SetActive(true);
         SceneManager.sceneLoaded += OnSceneLoaded;
         loadSceneName = sceneName;
-        if (loadSceneName != "MainManu")
+        if (loadSceneName != "MainManu" && loadSceneName != "EndingScene")
         {
             PlayerPrefs.SetString("Continue", loadSceneName);
             if (isContunue == false && loadSceneName != "Stage1")

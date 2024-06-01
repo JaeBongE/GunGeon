@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     GameManager gameManager;
     public static Enemy Instance;
+    //[SerializeField] protected GameObject UI;
 
     [Header("±âº»½ºÅÝ")]
     [SerializeField] protected float maxHp;
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float minY;
     [SerializeField] protected float moveSpeed;
     protected Vector3 targetPos;
+    protected Transform trsPlayer;
     protected bool isMove = true;
     protected float moveMaxCool = 2f;
     protected float moveCool = 0f;
@@ -68,6 +70,20 @@ public class Enemy : MonoBehaviour
 
         CheckPlayer();
         curHp -= _damage;
+
+        //Boss scBoss = GetComponent<Boss>();
+        //scBoss.checkBossHp();
+
+        //if (gameObject.name == "Boss")
+        //{
+        //    BossUI scUI = UI.GetComponent<BossUI>();
+        //    scUI.SetBossHp(curHp, maxHp);
+
+        //    if (curHp == maxHp / 2)
+        //    {
+        //        moveSpeed += 3f;
+        //    }
+        //}
 
         if (curHp > 0)
         {
@@ -154,6 +170,7 @@ public class Enemy : MonoBehaviour
         {
             GameObject objPlayer = GameObject.Find("Player");
             targetPos = objPlayer.transform.position;
+            trsPlayer = objPlayer.transform;
             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
         }
     }

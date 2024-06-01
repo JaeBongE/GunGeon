@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BossCutScene : MonoBehaviour
 {
+    [SerializeField] GameObject BackGround;
+
     [SerializeField] GameObject B;
     [SerializeField] GameObject O;
     [SerializeField] GameObject S;
@@ -29,6 +32,8 @@ public class BossCutScene : MonoBehaviour
 
     private void Awake()
     {
+        BackGround.SetActive(false);
+
         canvas = GetComponent<CanvasGroup>();
         canvas.alpha = 0f;
 
@@ -73,6 +78,7 @@ public class BossCutScene : MonoBehaviour
 
     public void CheckCutScene()
     {
+        BackGround.SetActive(true);
         canvas.alpha = 1f;
         isOpen = true;
     }
@@ -85,8 +91,11 @@ public class BossCutScene : MonoBehaviour
             if (canvas.alpha < 0f)
             {
                 canvas.alpha = 0f;
-                
-                //gameObject.SetActive(false);
+            }
+
+            if (canvas.alpha == 0f)
+            {
+                BackGround.SetActive(false);
             }
 
             BossUI scBossUI = UI.GetComponent<BossUI>();
@@ -117,7 +126,7 @@ public class BossCutScene : MonoBehaviour
                 }
             }
 
-            
+
 
 
             //for (int iNum = 0; iNum < 3; iNum++)

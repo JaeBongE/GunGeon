@@ -13,6 +13,7 @@ public class BossStageManager : MonoBehaviour
     [SerializeField] private float maxX;
     private bool isTerminal = false;
 
+
     private void Awake()
     {
         if (Instance == null)
