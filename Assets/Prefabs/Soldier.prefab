@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 3714128588768189748}
   - component: {fileID: 8420893640705003903}
   - component: {fileID: 8572555380425213150}
-  - component: {fileID: 8589252392808590132}
+  - component: {fileID: 6732711448163664694}
   m_Layer: 8
   m_Name: Soldier
   m_TagString: Enemy
@@ -204,7 +204,7 @@ Transform:
   - {fileID: 188817416653261257}
   - {fileID: 7157334734280232518}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8596628221219889031
 SpriteRenderer:
@@ -346,10 +346,22 @@ MonoBehaviour:
   moveSpeed: 2
   isCheckPlayer: 0
   InvTime: 0.5
+  gridSize: 1
+  speed: 0.05
+  AstarRandomPos: {x: 0, y: 0}
+  obstacles:
+    serializedVersion: 2
+    m_Bits: 128
+  searchShortcut: 0
+  snapToGrid: 0
+  drawDebugLines: 1
+  show: 0
+  radius: 0.5
+  color: {r: 1, g: 0, b: 0, a: 1}
   trsMuzzle: {fileID: 7157334734280232518}
   enemyBullet: {fileID: 5142194776378426475, guid: 4e260691d1a0d41458809252e58a8680, type: 3}
   bulletSpeed: 10
---- !u!50 &8589252392808590132
+--- !u!50 &6732711448163664694
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0

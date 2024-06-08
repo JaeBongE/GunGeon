@@ -343,7 +343,7 @@ TextureImporter:
     overridden: 0
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
@@ -356,7 +356,7 @@ TextureImporter:
     overridden: 1
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Server
     maxTextureSize: 2048
@@ -369,7 +369,7 @@ TextureImporter:
     overridden: 0
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -420,9 +420,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 24
-        y: 423
+        y: 359
         width: 113
-        height: 75
+        height: 139
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -462,9 +462,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 295
-        y: 424
+        y: 361
         width: 79
-        height: 57
+        height: 120
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -483,7 +483,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 161
-        y: 359
+        y: 358
         width: 95
         height: 63
       alignment: 7
@@ -504,9 +504,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 161
-        y: 422
+        y: 358
         width: 95
-        height: 73
+        height: 137
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

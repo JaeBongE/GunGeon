@@ -1,7 +1,13 @@
+using Aoiti.Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Tilemaps;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Enemy : MonoBehaviour
 {
@@ -35,7 +41,41 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     protected float InvTime = 1.0f;
 
+    [Header("Navigator options")]
+    [SerializeField] float gridSize = 0.5f; //increase patience or gridSize for larger maps
+    [SerializeField] float speed = 0.05f; //increase for faster movement
+    protected bool Astar = false;
+    [SerializeField] protected Vector2 AstarRandomPos;
 
+    Pathfinder<Vector2> pathfinder; //the pathfinder object that stores the methods and patience
+    [Tooltip("The layers that the navigator can not pass through.")]
+    [SerializeField] LayerMask obstacles;
+    [Tooltip("Deactivate to make the navigator move along the grid only, except at the end when it reaches to the target point. This shortens the path but costs extra Physics2D.LineCast")]
+    [SerializeField] bool searchShortcut = false;
+    [Tooltip("Deactivate to make the navigator to stop at the nearest point on the grid.")]
+    [SerializeField] bool snapToGrid = false;
+    Vector2 targetNode; //target in 2D space
+    List<Vector2> path;
+    List<Vector2> pathLeftToGo = new List<Vector2>();
+    [SerializeField] bool drawDebugLines;
+
+#if UNITY_EDITOR
+    [SerializeField] bool show;
+    [SerializeField] float radius = 0.5f;
+    [SerializeField] Color color;
+
+    private void OnDrawGizmos()
+    {
+        if (show == true)
+        {
+            Handles.color = color;
+            Handles.DrawSolidDisc(transform.position, Vector3.forward, radius);
+        }
+    }
+
+#endif
+
+    
     public virtual void Awake()
     {
         //if (Instance == null)
@@ -57,6 +97,95 @@ public class Enemy : MonoBehaviour
     {
         targetPos = getRandomPos();
         gameManager = GameManager.Instance;
+
+        pathfinder = new Pathfinder<Vector2>(GetDistance, GetNeighbourNodes, 1000); //increase patience or gridSize for larger maps
+    }
+
+    void GetMoveCommand(Vector2 target)
+    {
+        Vector2 closestNode = GetClosestNode(transform.position);
+        if (pathfinder.GenerateAstarPath(closestNode, GetClosestNode(target), out path)) //Generate path between two points on grid that are close to the transform position and the assigned target.
+        {
+            if (searchShortcut && path.Count > 0)
+                pathLeftToGo = ShortenPath(path);
+            else
+            {
+                pathLeftToGo = new List<Vector2>(path);
+                if (!snapToGrid) pathLeftToGo.Add(target);
+            }
+
+        }
+
+    }
+
+
+    /// <summary>
+    /// Finds closest point on the grid
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    Vector2 GetClosestNode(Vector2 target)
+    {
+        return new Vector2(Mathf.Round(target.x / gridSize) * gridSize, Mathf.Round(target.y / gridSize) * gridSize);
+    }
+
+    /// <summary>
+    /// A distance approximation. 
+    /// </summary>
+    /// <param name="A"></param>
+    /// <param name="B"></param>
+    /// <returns></returns>
+    float GetDistance(Vector2 A, Vector2 B)
+    {
+        return (A - B).sqrMagnitude; //Uses square magnitude to lessen the CPU time.
+    }
+
+    /// <summary>
+    /// Finds possible conenctions and the distances to those connections on the grid.
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    Dictionary<Vector2, float> GetNeighbourNodes(Vector2 pos)
+    {
+        Dictionary<Vector2, float> neighbours = new Dictionary<Vector2, float>();
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (i == 0 && j == 0) continue;
+
+                Vector2 dir = new Vector2(i, j) * gridSize;
+                if (!Physics2D.Linecast(pos, pos + dir, obstacles))
+                {
+                    neighbours.Add(GetClosestNode(pos + dir), dir.magnitude);
+                }
+            }
+
+        }
+        return neighbours;
+    }
+
+
+    List<Vector2> ShortenPath(List<Vector2> path)
+    {
+        List<Vector2> newPath = new List<Vector2>();
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            newPath.Add(path[i]);
+            for (int j = path.Count - 1; j > i; j--)
+            {
+                if (!Physics2D.Linecast(path[i], path[j], obstacles))
+                {
+
+                    i = j;
+                    break;
+                }
+            }
+            newPath.Add(path[i]);
+        }
+        newPath.Add(path[path.Count - 1]);
+        return newPath;
     }
 
     /// <summary>
@@ -65,7 +194,7 @@ public class Enemy : MonoBehaviour
     /// <param name="_damage">받은 데미지</param>
     public virtual bool GetDamage(float _damage)
     {
-        if (invTimer != 0.0f) return false;
+        if (invTimer != 0.0f || isDeath == true) return false;
         invTimer = InvTime;
 
         CheckPlayer();
@@ -158,20 +287,89 @@ public class Enemy : MonoBehaviour
 
         if (isCheckPlayer == false)//Player 인식 전
         {
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
-
-            if (Vector3.Distance(gameObject.transform.position, targetPos) < 0.1f)//타겟위치로 이동완료시 멈추고 다음 타겟위치를 검색
+            //gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
+            if (Astar == false)
             {
-                isMove = false;
-                targetPos = getRandomPos();
+                while (true)
+                {
+                    float randomX = Random.Range(minX, maxX);
+                    float randomY = Random.Range(minY, maxY);
+                    AstarRandomPos = new Vector2(randomX, randomY);
+                    if (Physics2D.OverlapCircleAll(AstarRandomPos, 0.5f, obstacles).Length == 0)//포지션이 wall 콜라이더에 없을때만 통과
+                    {
+                        break;
+                    }
+                }
+
+                Astar = true;
             }
+
+            GetMoveCommand(AstarRandomPos);
+            if (pathLeftToGo.Count > 0) //if the target is not yet reached
+            {
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, (Vector3)pathLeftToGo[0], moveSpeed * Time.deltaTime);
+
+                //Vector3 dir = (Vector3)pathLeftToGo[0] - transform.position;
+                //transform.position += dir.normalized * speed;
+
+                //if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude < speed)
+                //{
+                //    transform.position = pathLeftToGo[0];
+                //    pathLeftToGo.RemoveAt(0);
+
+                //}
+            }
+
+            if (drawDebugLines)
+            {
+                for (int i = 0; i < pathLeftToGo.Count - 1; i++) //visualize your path in the sceneview
+                {
+                    Debug.DrawLine(pathLeftToGo[i], pathLeftToGo[i + 1]);
+                }
+            }
+
+
+
+            if (Vector3.Distance(gameObject.transform.position, AstarRandomPos) < 0.1f)//타겟위치로 이동완료시 멈추고 다음 타겟위치를 검색
+            {
+                transform.position = pathLeftToGo[0];
+                pathLeftToGo.RemoveAt(0);
+
+                isMove = false;
+                //targetPos = getRandomPos();
+                Astar = false;
+            }
+
         }
         else//Player 인식 후
         {
             GameObject objPlayer = GameObject.Find("Player");
             targetPos = objPlayer.transform.position;
             trsPlayer = objPlayer.transform;
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
+            //gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
+
+            GetMoveCommand(targetPos);
+
+            if (pathLeftToGo.Count > 0) //if the target is not yet reached
+            {
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, (Vector3)pathLeftToGo[0], moveSpeed * Time.deltaTime);
+
+                //Vector3 dir = (Vector3)pathLeftToGo[0] - transform.position;
+                //transform.position += dir.normalized * speed;
+                //if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude < speed)
+                //{
+                //    transform.position = pathLeftToGo[0];
+                //    pathLeftToGo.RemoveAt(0);
+                //}
+            }
+
+            if (drawDebugLines)
+            {
+                for (int i = 0; i < pathLeftToGo.Count - 1; i++) //visualize your path in the sceneview
+                {
+                    Debug.DrawLine(pathLeftToGo[i], pathLeftToGo[i + 1]);
+                }
+            }
         }
     }
 
@@ -190,6 +388,7 @@ public class Enemy : MonoBehaviour
             {
                 moveMaxCool = 2f;
                 isMove = true;
+                Astar = false;
             }
         }
     }
@@ -229,5 +428,6 @@ public class Enemy : MonoBehaviour
     public void doDestroy()
     {
         Destroy(gameObject);
+        CancelInvoke("returnColor");
     }
 }
