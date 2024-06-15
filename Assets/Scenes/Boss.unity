@@ -33344,6 +33344,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31316745f7d72c04987213f2313b9c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objPistol: {fileID: 1127752917129337967, guid: fc58bd95ca7fab24997635802dfbb6f2, type: 3}
+  objRifle: {fileID: 7266452870560630321, guid: 8bb6b54ae7c423d48a62ee28d37e0031, type: 3}
   wall: {fileID: 1516843205}
   maxX: 6.23
 --- !u!1 &1516843205
@@ -60687,6 +60689,18 @@ MonoBehaviour:
   moveSpeed: 3
   isCheckPlayer: 0
   InvTime: 0.2
+  gridSize: 0.5
+  speed: 0.05
+  AstarRandomPos: {x: 0, y: 0}
+  obstacles:
+    serializedVersion: 2
+    m_Bits: 128
+  searchShortcut: 0
+  snapToGrid: 0
+  drawDebugLines: 1
+  show: 0
+  radius: 0.5
+  color: {r: 0, g: 0, b: 0, a: 0}
   UI: {fileID: 1660192550}
   patternTimer: 5
   enemyBullet: {fileID: 5142194776378426475, guid: 4e260691d1a0d41458809252e58a8680, type: 3}
@@ -60817,7 +60831,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

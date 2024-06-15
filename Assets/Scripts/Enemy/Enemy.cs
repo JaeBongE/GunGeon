@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     protected Animator anim;
     [SerializeField] protected GameObject hitBox;
     protected bool isDeath = false;
+    BoxCollider2D colider;
 
     [Header("적의 이동범위")]
     [SerializeField] protected float maxX;
@@ -91,6 +92,7 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         isMove = true;
+        colider = GetComponent<BoxCollider2D>();
     }
 
     public virtual void Start()
@@ -287,6 +289,8 @@ public class Enemy : MonoBehaviour
 
         if (isCheckPlayer == false)//Player 인식 전
         {
+            colider.enabled = false;
+
             //gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPos, moveSpeed * Time.deltaTime);
             if (Astar == false)
             {
@@ -305,6 +309,7 @@ public class Enemy : MonoBehaviour
             }
 
             GetMoveCommand(AstarRandomPos);
+
             if (pathLeftToGo.Count > 0) //if the target is not yet reached
             {
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, (Vector3)pathLeftToGo[0], moveSpeed * Time.deltaTime);
@@ -343,6 +348,8 @@ public class Enemy : MonoBehaviour
         }
         else//Player 인식 후
         {
+            colider.enabled = true;
+
             GameObject objPlayer = GameObject.Find("Player");
             targetPos = objPlayer.transform.position;
             trsPlayer = objPlayer.transform;

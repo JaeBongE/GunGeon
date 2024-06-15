@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Stage2Manager : MonoBehaviour
 {
     public static Stage2Manager Instance;
+    GameManager gameManager;
 
     GameObject player;
     [SerializeField] Image gunUI;
@@ -58,6 +59,8 @@ public class Stage2Manager : MonoBehaviour
         SpriteRenderer sprGun = objGun.GetComponent<SpriteRenderer>();
         gunUI.sprite = sprGun.sprite;
         gunUI.gameObject.SetActive(true);
+
+        gameManager = GameManager.Instance;
     }
 
     private void Update()
@@ -120,6 +123,7 @@ public class Stage2Manager : MonoBehaviour
         player = GameObject.Find("Player");
         Player scPlayer = player.GetComponent<Player>();
         scPlayer.ChangeGun(Player.typeGun.Rifle);
+        gameManager.SetGunInfor(objRifle, false);
 
         PlayerPrefs.SetString("Rifle", "Get");
         //Rifle scRifle = objRifle.GetComponent<Rifle>();

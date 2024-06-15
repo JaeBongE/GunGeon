@@ -50,18 +50,32 @@ public class Soldier : Enemy
         Vector3 scale = gameObject.transform.localScale;
         base.move();
 
-        if (Pos.x > targetPos.x)
+        if (isCheckPlayer == false)
         {
-            scale.x = -1f;
+            if (Pos.x > AstarRandomPos.x)
+            {
+                scale.x = -1f;
+            }
+            else
+            {
+                scale.x = 1f;
+            }
+            gameObject.transform.localScale = scale;
         }
         else
         {
-            scale.x = 1f;
+            if (Pos.x > targetPos.x)
+            {
+                scale.x = -1f;
+            }
+            else
+            {
+                scale.x = 1f;
+            }
+            gameObject.transform.localScale = scale;
+
         }
-        gameObject.transform.localScale = scale;
-
     }
-
     /// <summary>
     /// 데미지를 받았을 때 솔져 애니메이션 작동
     /// </summary>
@@ -148,4 +162,5 @@ public class Soldier : Enemy
             }
         }
     }
+        
 }

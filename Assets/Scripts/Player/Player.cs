@@ -41,6 +41,9 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject reLoadUi;
     private bool isPistol = false;
     [SerializeField] Transform trsBack;
+
+    [SerializeField] AudioSource audioSource;
+
     public GameObject GetReloadUi()
     {
         return reLoadUi;
@@ -72,7 +75,7 @@ public class Player : MonoBehaviour
         //{
         //    curHp = maxHp;
         //}
-        
+
 
         //if (trsLeftHand.GetChild(0).gameObject != null)
         //{
@@ -90,6 +93,7 @@ public class Player : MonoBehaviour
         //        isPistol = true;
         //    }
         //}
+
     }
 
     private void Start()
@@ -383,7 +387,7 @@ public class Player : MonoBehaviour
 
         //GameObject objManager = GameObject.Find("GameManager");
         //GameManager scManager = objManager.GetComponent<GameManager>();
-        //scManager.SetGunInfor(objGun, false);
+        //gameManager.SetGunInfor(objGun, false);
 
         //gameManager.SetGunInfor(objGun, false);
 

@@ -235,7 +235,7 @@ Transform:
   - {fileID: 5361558363352946830}
   - {fileID: 4319252439137021072}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &434630037294097509
 SpriteRenderer:
@@ -311,6 +311,18 @@ MonoBehaviour:
   moveSpeed: 3
   isCheckPlayer: 0
   InvTime: 0.5
+  gridSize: 0.5
+  speed: 0.05
+  AstarRandomPos: {x: 0, y: 0}
+  obstacles:
+    serializedVersion: 2
+    m_Bits: 128
+  searchShortcut: 0
+  snapToGrid: 0
+  drawDebugLines: 1
+  show: 0
+  radius: 0.5
+  color: {r: 0, g: 0, b: 0, a: 0}
   trsMuzzle: {fileID: 4319252439137021072}
   enemyBullet: {fileID: 5142194776378426475, guid: 4e260691d1a0d41458809252e58a8680, type: 3}
   bulletSpeed: 8

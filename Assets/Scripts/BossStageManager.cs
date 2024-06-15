@@ -5,8 +5,12 @@ using UnityEngine;
 public class BossStageManager : MonoBehaviour
 {
     public static BossStageManager Instance;
+    GameManager gameManager;
     
     GameObject player;
+
+    [SerializeField] GameObject objPistol;
+    [SerializeField] GameObject objRifle;
 
     [Header("터미널 눌렀을 때")]
     [SerializeField] GameObject wall;
@@ -30,13 +34,17 @@ public class BossStageManager : MonoBehaviour
     {
         player = GameObject.Find("Player");
         Player scPlayer = player.GetComponent<Player>();
+        gameManager = GameManager.Instance;
         if (PlayerPrefs.HasKey("Rifle"))
         {
             scPlayer.ChangeGun(Player.typeGun.Rifle);
+            gameManager.SetGunInfor(objRifle, false);
+
         }
         else
         {
             scPlayer.ChangeGun(Player.typeGun.Pistol);
+            gameManager.SetGunInfor(objPistol, false);
         }
     }
 

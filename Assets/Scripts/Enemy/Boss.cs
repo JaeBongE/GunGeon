@@ -129,15 +129,30 @@ public class Boss : Enemy
         Vector3 scale = gameObject.transform.localScale;
         base.move();
 
-        if (Pos.x > targetPos.x)
+        if (isCheckPlayer == false)
         {
-            scale.x = 1f;
+            if (Pos.x > AstarRandomPos.x)
+            {
+                scale.x = 1f;
+            }
+            else
+            {
+                scale.x = -1f;
+            }
+            gameObject.transform.localScale = scale;
         }
         else
         {
-            scale.x = -1f;
+            if (Pos.x > targetPos.x)
+            {
+                scale.x = 1f;
+            }
+            else
+            {
+                scale.x = -1f;
+            }
+            gameObject.transform.localScale = scale;
         }
-        gameObject.transform.localScale = scale;
     }
 
     private void coolPattern1()

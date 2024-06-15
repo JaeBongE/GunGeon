@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
         }
 
         setPlayerHpUI();
+        //setUI();
     }
 
     void Update()
@@ -97,6 +98,14 @@ public class GameManager : MonoBehaviour
 
             (Image _gunUi, TMP_Text _gunBulletUi) gunUI = scPlayerUI.GetGunUI();
             gunUi = gunUI._gunUi;
+            //if (PlayerPrefs.HasKey("Rifle"))
+            //{
+            //    SetGunInfor(fabWeapon[1], false);
+            //}
+            //else
+            //{
+            //    SetGunInfor(fabWeapon[0], false);
+            //}
             gunBulletUi = gunUI._gunBulletUi;
 
             //gunUi.gameObject.SetActive(false);
@@ -249,6 +258,8 @@ public class GameManager : MonoBehaviour
     public void SetGunInfor(GameObject _gun, bool _isGun)
     {
         SpriteRenderer spr = _gun.GetComponent<SpriteRenderer>();
+        setUI();
+
         gunUi.gameObject.SetActive(true);
         gunUi.sprite = spr.sprite;
 
