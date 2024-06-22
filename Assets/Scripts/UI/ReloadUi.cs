@@ -12,6 +12,7 @@ public class ReloadUi : MonoBehaviour
     private void Awake()
     {
         slider = GetComponent<Slider>();
+        slider.value = 0f;
     }
 
     private void Update()
@@ -21,6 +22,7 @@ public class ReloadUi : MonoBehaviour
 
     public void setReload(float _reLoadTimer, float _maxReLoadTimer)
     {
+        slider.value = 0f;
         minValue = _reLoadTimer;
         maxValue = _maxReLoadTimer;
     }

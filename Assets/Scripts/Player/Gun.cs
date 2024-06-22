@@ -25,6 +25,9 @@ public class Gun : MonoBehaviour
     [SerializeField] protected GameObject eIcon;
     protected bool isChangeGun = false;
 
+    [SerializeField] protected AudioSource audio;
+    [SerializeField] protected AudioClip ReloadSound;
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -175,8 +178,12 @@ public class Gun : MonoBehaviour
     {
         if (curBullet == maxBullet) return;
 
+        
+
         if (Input.GetKeyDown(KeyCode.R))
         {
+            audio.PlayOneShot(ReloadSound);
+
             isReload = true;//재장전 트리거
         }
         
@@ -186,17 +193,19 @@ public class Gun : MonoBehaviour
             reLoadUi.SetActive(true);
             ReloadUi scReload = reLoadUi.GetComponentInChildren<ReloadUi>();
             reloadTimer += Time.deltaTime;
+            
+            //재장전 이미지 표시
+            scReload.setReload(reloadTimer, reloadMaxTimer);
+
             if (reloadTimer > reloadMaxTimer)
             {
                 reloadTimer = 0;
+                scReload.setReload(reloadTimer, reloadMaxTimer);
                 curBullet = maxBullet;
                 gameManager.SetBulletInfor(curBullet, maxBullet);
                 isReload = false;
                 reLoadUi.SetActive(false);
             }
-            
-            //재장전 이미지 표시
-            scReload.setReload(reloadTimer, reloadMaxTimer);
         }
     }
 }

@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform trsBack;
 
     [SerializeField] AudioSource audioSource;
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
 
     public GameObject GetReloadUi()
     {
@@ -179,6 +180,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            audioSource.PlayOneShot(audioClips[0]);
+
             dashTime = dashLimitTime;//대쉬를 했을 때 velocitiy가 다른 함수에 적용되지 않게 하기 위함
             dashCoolTime = dashCoolMaxTime;//대쉬 했을 때 쿨타임 돌게 설계해 UI 표현
 
@@ -480,6 +483,8 @@ public class Player : MonoBehaviour
 
     public void Heal()
     {
+        audioSource.PlayOneShot(audioClips[1]);
+
         curHp = maxHp;
         gameManager.SetPlayerHp(maxHp, curHp);
     }

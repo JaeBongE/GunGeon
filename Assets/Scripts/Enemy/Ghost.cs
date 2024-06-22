@@ -96,6 +96,8 @@ public class Ghost : Enemy
     {
         if (isShoot == false)
         {
+            auido.PlayOneShot(auido.clip);
+
             GameObject bullets = GameObject.Find("Bullets");
             Transform trsBullets = bullets.transform;
 

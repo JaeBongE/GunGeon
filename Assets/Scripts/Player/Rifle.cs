@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class Rifle : Gun
 {
-
-
     public override void Awake()
     {
         base.Awake();
-
+        audio = GetComponent<AudioSource>();
     }
 
     public override void Start()
@@ -43,6 +41,11 @@ public class Rifle : Gun
 
         if (isShoot == true) return;//발사 딜레이
 
+        if (isShoot == false && isReload == false)
+        {
+            audio.PlayOneShot(audio.clip);
+        }
+
         GameObject bullets = GameObject.Find("Bullets");
         Transform trsBullets = bullets.transform;
 
@@ -68,6 +71,8 @@ public class Rifle : Gun
         //총알이 0이 되면 재장전
         if (curBullet <= 0f)
         {
+            audio.PlayOneShot(ReloadSound);
+
             isReload = true;//재장전 트리거
         }
     }

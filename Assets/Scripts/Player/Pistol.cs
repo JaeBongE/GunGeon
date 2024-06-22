@@ -8,6 +8,7 @@ public class Pistol : Gun
     public override void Awake()
     {
         base.Awake();
+        audio = GetComponent<AudioSource>();
     }
 
     public override void Start()
@@ -23,10 +24,16 @@ public class Pistol : Gun
 
     public override void CreateBullet()
     {
+
         base.CreateBullet();
         if (isReload == true) return;//장전시 발사x
 
         if (isShoot == true) return;//발사 딜레이
+
+        if (isShoot == false && isReload == false)
+        {
+            audio.PlayOneShot(audio.clip);
+        }
 
         GameObject bullets = GameObject.Find("Bullets");
         Transform trsBullets = bullets.transform;
@@ -53,6 +60,8 @@ public class Pistol : Gun
         //총알이 0이 되면 재장전
         if (curBullet <= 0f)
         {
+            base.audio.PlayOneShot(ReloadSound);
+
             isReload = true;//재장전 트리거
         }
     }

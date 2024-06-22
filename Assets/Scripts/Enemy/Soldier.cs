@@ -14,6 +14,7 @@ public class Soldier : Enemy
     [SerializeField] Transform trsMuzzle;
     [SerializeField] GameObject enemyBullet;
     [SerializeField] private float bulletSpeed = 5f;
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
 
     public override void Awake()
     {
@@ -113,6 +114,8 @@ public class Soldier : Enemy
             readyShoot = true;
             if (isShoot == false)
             {
+                auido.PlayOneShot(audioClips[0]);
+
                 GameObject bullets = GameObject.Find("Bullets");
                 Transform trsBullets = bullets.transform;
 
@@ -162,5 +165,11 @@ public class Soldier : Enemy
             }
         }
     }
-        
+
+    public override void death()
+    {
+        base.death();
+
+        auido.PlayOneShot(audioClips[1]);
+    }
 }

@@ -65,6 +65,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] float radius = 0.5f;
     [SerializeField] Color color;
 
+    protected AudioSource auido;
+
     private void OnDrawGizmos()
     {
         if (show == true)
@@ -93,6 +95,7 @@ public class Enemy : MonoBehaviour
         spr = GetComponent<SpriteRenderer>();
         isMove = true;
         colider = GetComponent<BoxCollider2D>();
+        auido = GetComponent<AudioSource>();
     }
 
     public virtual void Start()
