@@ -523,6 +523,7 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: 5a618c007fe353c459f6916c3860e274, type: 3}
   - {fileID: 8300000, guid: c48a972d3d024c2408a3331750786a29, type: 3}
+  - {fileID: 8300000, guid: 1d2f348735857f047b7a5defd60d930a, type: 3}
 --- !u!50 &589258702273478113
 Rigidbody2D:
   serializedVersion: 4
@@ -625,7 +626,7 @@ AudioSource:
   m_GameObject: {fileID: 5354803709527066355}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -904833216722164482, guid: 00180e490e3d1154f8307beb7bb5d2b3, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1

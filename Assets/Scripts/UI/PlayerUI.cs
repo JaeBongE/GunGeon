@@ -24,6 +24,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] TMP_Text TextNodamage;
     private bool isNodamage = false;
 
+    [SerializeField] Button btnSettings;
+
     public (Image gunUi, TMP_Text gunBulletUi) GetGunUI()
     {
         return (gunUi, gunBulletUi);
@@ -60,6 +62,12 @@ public class PlayerUI : MonoBehaviour
         }
 
         checkNodamage();
+
+        btnSettings.onClick.AddListener(() => 
+        {
+            SettingsUI scSettingUI = btnSettings.GetComponent<SettingsUI>();
+            scSettingUI.OpenSettings();
+        });
     }
 
 

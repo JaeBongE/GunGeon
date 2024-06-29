@@ -5,6 +5,7 @@ using UnityEngine;
 public class Boss : Enemy
 {
     [SerializeField] GameObject UI;
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
 
     [Header("패턴")]
     [SerializeField] private float patternTimer = 5f;
@@ -271,6 +272,7 @@ public class Boss : Enemy
         anim.SetTrigger("pattern1");
 
         Debug.Log("패턴1");
+        auido.PlayOneShot(audioClips[0]);
 
         for (int iNum = 0; iNum < listPattern1.Count; iNum++)
         {
@@ -307,7 +309,7 @@ public class Boss : Enemy
         isStop = true;
 
         Debug.Log("패턴3");
-
+        auido.PlayOneShot(audioClips[2]);
         StartCoroutine(shootPattern3(trsBullet));
     }
 

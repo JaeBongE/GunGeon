@@ -6,12 +6,18 @@ public class Pattern2 : MonoBehaviour
 {
     [SerializeField] List<GameObject> listMuzzle = new List<GameObject>();
     [SerializeField] List<GameObject> listExplosion = new List<GameObject>();
+    AudioSource audioPattern2;
 
     private bool isStart = false;
     private float timer = 3f;
     private float Limittimer = 3f;
 
     private bool doExplosion = false;
+
+    private void Awake()
+    {
+        audioPattern2 = GetComponent<AudioSource>();
+    }
 
     private void Start()
     {
@@ -57,6 +63,7 @@ public class Pattern2 : MonoBehaviour
                     for (int jNum = 0; jNum < listExplosion.Count; jNum ++)
                     {
                         listExplosion[jNum].SetActive(true);
+                        audioPattern2.PlayOneShot(audioPattern2.clip);
                     }
 
                     //for (int iNum = 0; iNum < listMuzzle.Count; iNum++)

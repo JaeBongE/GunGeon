@@ -460,6 +460,7 @@ public class Player : MonoBehaviour
 
             if (curHp < 1)//피가 0이 되면 
             {
+                audioSource.PlayOneShot(audioClips[2]);
                 anim.SetTrigger("isDeath");//죽는다
                 gameManager.PlayerDeath();
             }

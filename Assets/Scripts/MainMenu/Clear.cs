@@ -32,5 +32,4 @@ public class Clear : MonoBehaviour
             gameObject.SetActive(false);
         });
     }
-
 }

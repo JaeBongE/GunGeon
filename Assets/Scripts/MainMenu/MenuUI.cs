@@ -22,6 +22,7 @@ public class MenuUI : MonoBehaviour
     [SerializeField] Button btnExit;
     [SerializeField] GameObject oneMore;
     [SerializeField] GameObject clear;
+    [SerializeField] Button btnSettings;
 
     private void Awake()
     {
@@ -122,6 +123,12 @@ public class MenuUI : MonoBehaviour
         btnExit.onClick.AddListener(() =>
         {
             oneMore.SetActive(true);
+        });
+
+        btnSettings.onClick.AddListener(() =>
+        {
+            SettingsUI scSettingUI = btnSettings.GetComponent<SettingsUI>();
+            scSettingUI.OpenSettings();
         });
     }
 
