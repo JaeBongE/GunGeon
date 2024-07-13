@@ -4,12 +4,25 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
+    public static CursorManager Instance;
+
     [SerializeField] Texture2D mouseDefault;
     [SerializeField] Texture2D mouseClick;
 
     [SerializeField] Vector2 cursorAim = new Vector2(0.5f, 0.5f);
     Vector2 fixedCursorAim;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     void Start()
     {
