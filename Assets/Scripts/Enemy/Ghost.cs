@@ -17,6 +17,7 @@ public class Ghost : Enemy
     public override void Awake()
     {
         base.Awake();
+
     }
 
     //public override void Update()

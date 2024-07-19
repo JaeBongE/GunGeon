@@ -49,6 +49,12 @@ public class Boss : Enemy
         P3,
     }
 
+    public override void Awake()
+    {
+        base.Awake();
+
+    }
+
 
     public override void Start()
     {
