@@ -60,6 +60,7 @@ public class Enemy : MonoBehaviour
     List<Vector2> pathLeftToGo = new List<Vector2>();
     [SerializeField] bool drawDebugLines;
 
+
     protected AudioSource auido;
 
 #if UNITY_EDITOR
