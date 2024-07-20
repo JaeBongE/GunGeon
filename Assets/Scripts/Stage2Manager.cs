@@ -37,6 +37,11 @@ public class Stage2Manager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        if (PlayerPrefs.HasKey("Rifle"))
+        {
+            PlayerPrefs.DeleteKey("Rifle");
+        }
     }
 
     private void Start()

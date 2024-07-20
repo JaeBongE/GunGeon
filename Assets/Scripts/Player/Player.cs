@@ -6,7 +6,19 @@ using UnityEngine.UIElements;
 public class Player : MonoBehaviour
 {
     public static Player Instance;
+
     GameManager gameManager;
+    GameManager gameManagerInstance
+    {
+        get 
+        {
+            if (gameManager == null)
+            {
+                gameManager = GameManager.Instance;
+            }
+            return gameManager;
+        }   
+    }
 
     Rigidbody2D rigid;
     Animator anim;
@@ -100,17 +112,16 @@ public class Player : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
-        gameManager = GameManager.Instance;
         if (PlayerPrefs.HasKey("CurHP") == true)
         {
             curHp = PlayerPrefs.GetFloat("CurHP");
-            gameManager.SetPlayerHp(maxHp, curHp);
+            gameManagerInstance.SetPlayerHp(maxHp, curHp);
         }
         else
         {
             curHp = maxHp;
         }
-        gameManager.SetPlayerHp(maxHp, curHp);
+        gameManagerInstance.SetPlayerHp(maxHp, curHp);
     }
 
     private void Update()
@@ -231,7 +242,7 @@ public class Player : MonoBehaviour
         if (isDashCool == true && dashCoolTime != 0f)
         {
             dashCoolTime -= Time.deltaTime;
-            gameManager.GetPlayerDash(dashCoolTime, dashCoolMaxTime, true);//게임매니저로 대쉬 쿨 타임 전달해 UI관리
+            gameManagerInstance.GetPlayerDash(dashCoolTime, dashCoolMaxTime, true);//게임매니저로 대쉬 쿨 타임 전달해 UI관리
 
             if (dashCoolTime < 0f)
             {
@@ -352,7 +363,13 @@ public class Player : MonoBehaviour
     {
         Destroy(objGun);
 
-        objGun = Instantiate(gameManager.GetWeapon(_value));
+        bool isExist = gameManagerInstance != null;
+        if (isExist == false)
+        { 
+            Debug.LogError("gameManager Empty");
+        }
+
+        objGun = Instantiate(gameManagerInstance.GetWeapon(_value));
         objGun.transform.SetParent(trsLeftHand);
         objGun.transform.localPosition = Vector3.zero;
         //objGun.transform.localPosition = trsLeftHand.localEulerAngles;
@@ -380,7 +397,7 @@ public class Player : MonoBehaviour
     {
         Destroy(objGun);
 
-        objGun = Instantiate(gameManager.GetWeapon(_value));
+        objGun = Instantiate(gameManagerInstance.GetWeapon(_value));
         objGun.transform.SetParent(trsLeftHand);
         objGun.transform.localPosition = Vector3.zero;
         objGun.transform.localEulerAngles = Vector3.zero;
@@ -462,14 +479,14 @@ public class Player : MonoBehaviour
             {
                 audioSource.PlayOneShot(audioClips[2]);
                 anim.SetTrigger("isDeath");//죽는다
-                gameManager.PlayerDeath();
+                gameManagerInstance.PlayerDeath();
             }
 
             gameObject.layer = LayerMask.NameToLayer("Nodamage");//한대 맞으면 레이어를 바꿔줘서 다단히트로 들어오는 것을 방지 및 빨간색 히트 연출
             hitBox.layer = LayerMask.NameToLayer("Nodamage");
             spr.color = Color.red;
 
-            gameManager.SetPlayerHp(maxHp, curHp);//게임매니저에 체력 상태를 전달해 UI표시
+            gameManagerInstance.SetPlayerHp(maxHp, curHp);//게임매니저에 체력 상태를 전달해 UI표시
             //gameManager.SetPlayerHpUI();
 
             Invoke("returnSituation", 1f);//원래 상태 복귀
@@ -487,7 +504,7 @@ public class Player : MonoBehaviour
         audioSource.PlayOneShot(audioClips[1]);
 
         curHp = maxHp;
-        gameManager.SetPlayerHp(maxHp, curHp);
+        gameManagerInstance.SetPlayerHp(maxHp, curHp);
     }
 
     public void ChangeGun(bool _isChange)
