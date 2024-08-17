@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
-        if (PlayerPrefs.HasKey("CurHP") == true)
+        if (PlayerPrefs.HasKey("CurHP") == true)//스테이지 넘어갈 때 플레이어의 HP를 저장해뒀다가 다음 스테이지에서 불러오기
         {
             curHp = PlayerPrefs.GetFloat("CurHP");
             gameManagerInstance.SetPlayerHp(maxHp, curHp);
@@ -168,7 +168,7 @@ public class Player : MonoBehaviour
         anim.SetFloat("Vertical", moveDir.y);
 
         if (sprGun == null) return;
-        else
+        else // 플레이어가 총을 가지고 있을 때 위아래 움직이는 방향에 따라 총의 sortingOrder값을 변경해 자연스러운 연출
         {
             if (moveDir.y > 0)//포폴 문서에 적기
             {
@@ -196,7 +196,7 @@ public class Player : MonoBehaviour
             dashTime = dashLimitTime;//대쉬를 했을 때 velocitiy가 다른 함수에 적용되지 않게 하기 위함
             dashCoolTime = dashCoolMaxTime;//대쉬 했을 때 쿨타임 돌게 설계해 UI 표현
 
-            gameObject.layer = LayerMask.NameToLayer("Nodamage");
+            gameObject.layer = LayerMask.NameToLayer("Nodamage");//대쉬 했을 때 layer를 바꿔 무적상태 구현
             hitBox.layer = LayerMask.NameToLayer("Nodamage");
             spr.color = new Color(1, 1, 1, 0.4f);
 
@@ -220,7 +220,7 @@ public class Player : MonoBehaviour
             }
 
             isDashCool = true;//대쉬 쿨타임 활성화
-            Invoke("returnSituation", 0.8f);
+            Invoke("returnSituation", 0.8f); // 무적 해제
         }
     }
 
@@ -325,7 +325,7 @@ public class Player : MonoBehaviour
             anim.SetBool("AimFront", true);
             anim.SetBool("AimBehind", false);
         }
-        else if (distanceMouseToPlayer.y < 0)//쳥의 에임이 아래로 향할때
+        else if (distanceMouseToPlayer.y < 0)//총의 에임이 아래로 향할때
         {
             if (trsGun == null) return;
 
@@ -359,6 +359,10 @@ public class Player : MonoBehaviour
         Rifle,
     }
 
+    /// <summary>
+    /// 총을 얻었을 때 or 스테이지를 이동할때 플레이어에게 총을 쥐어주는 함수
+    /// </summary>
+    /// <param name="_value"></param>
     public void GetGun(typeGun _value)
     {
         Destroy(objGun);
@@ -393,6 +397,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 총의 변경을 확인해서 총을 쥐어주는 함수
+    /// </summary>
+    /// <param name="_value"></param>
     public void ChangeGun(typeGun _value)
     {
         Destroy(objGun);
